@@ -1,4 +1,3 @@
-<h3>Quelle auswählen</h3>
 <mat-radio-group class="example-radio-group" [(ngModel)]="backendService.importSrc">
   <mat-card class="my-card">
     <mat-radio-button class="example-radio-button" [value]="0" class="noselect">
@@ -33,7 +32,7 @@
       </mat-form-field>
         <mat-form-field appearance="outline" style="max-width:150px">
             <mat-label>Einträge entdichten</mat-label>
-            <mat-select [(value)]="ts.timescale" (ngModelChange)="ts.save()">
+            <mat-select [(value)]="ts.timescale" (selectionChange)="ts.save()">
                 <mat-option [value]="null">Keine Beschränkung</mat-option>
                 <mat-option [value]="10">6 Einträge/Stunde</mat-option>
                 <mat-option [value]="15">4 Einträge/Stunde</mat-option>
@@ -54,7 +53,7 @@
         </mat-chip-list>
       </p>
         <mat-card-actions>
-            <button mat-raised-button (click)="readTs()" color="primary">›› ThingSpeak Abrufen!</button>
+            <mat-bar-button [options]="barButtonOptions" (click)="readTs()"></mat-bar-button>
         </mat-card-actions>
       <!--
       <hr class="my-4" />
@@ -85,7 +84,7 @@
                (change)="readCsv($event)" #fileInput />
         </div>
         <mat-card-actions>
-            <button mat-raised-button color="primary" (click)="fileInput.click()">›› CSV-Datei Auswählen</button>
+            <button mat-raised-button color="primary" (click)="fileInput.click()">›› CSV-Datei auswählen</button>
         </mat-card-actions>
       <!--
       <pre *ngIf="backendService.csvData" class="pre-scrollable">{{csvData|json}}</pre>

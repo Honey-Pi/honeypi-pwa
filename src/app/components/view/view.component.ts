@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {BackendService} from '../../services/backend.service';
 import {Router} from '@angular/router';
 import {MatProgressButtonOptions} from 'mat-progress-buttons';
+import {LocalStorage} from 'ngx-store';
 
 @Component({
   selector: 'app-view',
@@ -19,6 +20,9 @@ export class ViewComponent implements OnInit {
             return this.getDataCsv();
         }
     }
+
+    @LocalStorage() public showChart = true;
+    @LocalStorage() public showDygraph = false;
 
     // lineChart
     public lineChartData: Array<any> = this.getTsLineChartData();

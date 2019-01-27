@@ -20,15 +20,21 @@ body {
   background-color: #f5f5f5;
 }
 
-
+/* kleiner machen */
 .jumbotron {
-  padding: 1rem 1rem;
+  padding: 0.5rem 0.5rem;
 }
 
 main.container {
   margin-top:20px;
+  padding-left:5px;
+  padding-right:5px;
 }
+/*mat-card.mat-card {
+  padding:12px;
+}*/
 
+/* noselect */
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */

@@ -4,6 +4,7 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
+<!-- Latest Measurement Values -->
 <div class="row">
   <ng-container *ngFor="let sensor of backendService.getTsFieldForMeasurementView();let i=index; let odd=odd">
     <div class="col-6">
@@ -31,26 +32,46 @@
     <mat-bar-button [options]="barButtonOptions" (click)="updateTsData()" class="float-right"></mat-bar-button>
     <strong class="text-truncate">Letzte Messung vom {{backendService.tsDataLastLine.time.toLocaleString('de-DE')}}</strong>
 </div>
-<h3>Chart.js</h3>
-<div class="row">
-  <div class="col-12">
-    <div style="display: block;">
-      <canvas baseChart width="400" height="400"
-              [datasets]="lineChartData"
-              [labels]="lineChartLabels"
-              [options]="lineChartOptions"
-              [colors]="lineChartColors"
-              [legend]="lineChartLegend"
-              [chartType]="lineChartType"
-              (chartHover)="chartHovered($event)"
-              (chartClick)="chartClicked($event)"></canvas>
-    </div>
-  </div>
-</div>
-<h3>Dygraph</h3>
-<ng-dygraphs
-  [data]="data"
-  [options]="options"
-  [customVisibility]="false">
-</ng-dygraphs>
+<!-- Chart.js -->
+<mat-card style="margin-top:10px;margin-bottom:10px;">
+    <mat-card-content>
+        <mat-slide-toggle
+                color="accent"
+                [(ngModel)]="showChart" class="noselect">
+            <strong>Chart.js</strong>
+        </mat-slide-toggle>
+        <div class="row" *ngIf="showChart">
+            <div class="col-12">
+                <div style="display: block;">
+                    <canvas baseChart width="400" height="400"
+                            [datasets]="lineChartData"
+                            [labels]="lineChartLabels"
+                            [options]="lineChartOptions"
+                            [colors]="lineChartColors"
+                            [legend]="lineChartLegend"
+                            [chartType]="lineChartType"
+                            (chartHover)="chartHovered($event)"
+                            (chartClick)="chartClicked($event)"></canvas>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+<!-- Dygraph -->
+<mat-card>
+    <mat-card-content>
+        <mat-slide-toggle
+                color="accent"
+                [(ngModel)]="showDygraph" class="noselect">
+            <strong>Dygraph</strong>
+        </mat-slide-toggle>
+        <ng-dygraphs *ngIf="showDygraph"
+                [data]="data"
+                [options]="options"
+                [customVisibility]="false">
+        </ng-dygraphs>
+    </mat-card-content>
+</mat-card>
+
+
 

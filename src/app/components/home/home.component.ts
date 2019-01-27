@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BackendService } from '../../services/backend.service';
 import { LocalStorage, SessionStorage } from 'ngx-store';
+import {MatProgressButtonOptions} from 'mat-progress-buttons';
 
 @Component({
   selector: 'app-home',
@@ -9,47 +10,73 @@ import { LocalStorage, SessionStorage } from 'ngx-store';
 })
 export class HomeComponent implements OnInit {
 
-  @LocalStorage() public ts: any = {
-    channel_id: 651397,
-    api_key: 'QPAXQ8XI1Q0P6T11',
-    start: null,
-    end: null,
-    results: null,
-    timescale: 15
-  };
+    @LocalStorage() public ts: any = {
+        channel_id: 651397,
+        api_key: 'QPAXQ8XI1Q0P6T11',
+        start: null,
+        end: null,
+        results: null,
+        timescale: 15
+    };
 
-  @LocalStorage() public csv: any = {
-    seperator: ',',
-    skip_first: true
-  };
+    @LocalStorage() public csv: any = {
+        seperator: ',',
+        skip_first: true
+    };
 
-  constructor(public backendService: BackendService) { }
+    /*
+      Progress Button
+    */
+    barButtonOptions: MatProgressButtonOptions = {
+        active: false,
+        text: '›› ThingSpeak abrufen',
+        buttonColor: 'primary',
+        barColor: 'accent',
+        raised: true,
+        stroked: false,
+        mode: 'indeterminate',
+        value: 0,
+        disabled: false
+    };
 
-  ngOnInit() {
-  }
+    constructor(public backendService: BackendService) { }
 
-  setTime(days: number, hours: number = 0) {
-    const d: Date = new Date();
-    d.setDate(d.getDate() - days);
-    d.setHours(d.getHours() - hours);
+    ngOnInit() {
+    }
 
-    this.ts.end = null;
-    this.ts.start = d;
-    this.ts.save();
-  }
+    setTime(days: number, hours: number = 0) {
+        const d: Date = new Date();
+        d.setDate(d.getDate() - days);
+        d.setHours(d.getHours() - hours);
 
-  readTs() {
-    this.backendService.readTsChannel(this.ts.channel_id, 'json', this.ts.api_key, this.ts.results, this.ts.start, this.ts.end, this.ts.timescale).subscribe(
-      (val) => {
-        this.backendService.tsData = val;
-      },
-      response => {
-        this.backendService.tsData =  response;
-      },
-      () => {
-        console.log('The readTsChannel observable is now completed.');
-      });
-  }
+        this.ts.end = null;
+        this.ts.start = d;
+        this.ts.save();
+    }
+
+    readTs() {
+        this.barButtonOptions.active = true;
+        this.barButtonOptions.text = 'Lädt ThingSpeak...';
+
+        this.backendService.readTsChannel(this.ts.channel_id,
+            'json',
+            this.ts.api_key,
+            this.ts.results,
+            this.ts.start,
+            this.ts.end,
+            this.ts.timescale)
+            .subscribe( (val) => {
+                        this.backendService.tsData = val;
+                    },
+                    response => {
+                        this.backendService.tsData =  response;
+                    },
+                    () => {
+                        console.log('The readTsChannel observable is now completed.');
+                        this.barButtonOptions.active = false;
+                        this.barButtonOptions.text = '›› ThingSpeak abrufen';
+                    });
+    }
 
   readCsv(event) {
     const file: File = event.target.files[0];
