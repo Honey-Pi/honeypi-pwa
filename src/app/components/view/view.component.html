@@ -4,10 +4,6 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-<div class="clearfix">
-    <mat-bar-button [options]="barButtonOptions" (click)="updateTsData()" class="float-right"></mat-bar-button>
-    <strong class="text-truncate">Letzte Messung vom {{backendService.tsDataLastLine.time.toLocaleString('de-DE')}}</strong>
-</div>
 <div class="row">
   <ng-container *ngFor="let sensor of backendService.getTsFieldForMeasurementView();let i=index; let odd=odd">
     <div class="col-6">
@@ -30,6 +26,10 @@
     </div>
     <div [ngClass]="{'col-12': (i+1) % 2 == 0}" [ngStyle]="{'margin-bottom.px': ((i+1) % 2 == 0) ? 10 : 0}"></div>
   </ng-container>
+</div>
+<div class="clearfix">
+    <mat-bar-button [options]="barButtonOptions" (click)="updateTsData()" class="float-right"></mat-bar-button>
+    <strong class="text-truncate">Letzte Messung vom {{backendService.tsDataLastLine.time.toLocaleString('de-DE')}}</strong>
 </div>
 <h3>Chart.js</h3>
 <div class="row">
