@@ -39,7 +39,11 @@ export class BackendService {
         return fields;
     }
 
-  constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) { }
+
+    get isDataLoaded(): boolean {
+        return ((this.importSrc === 0 && this.tsData) || (this.importSrc === 1 && this.csvData));
+    }
 
   public readTsChannel(channel_id: number,
                        format: string = 'json',

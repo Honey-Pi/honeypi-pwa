@@ -28,9 +28,9 @@
               "src/manifest.json"
             ],
             "styles": [
-              "src/styles.scss",
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "./node_modules/dygraphs/dist/dygraph.min.css"
+              "./node_modules/dygraphs/dist/dygraph.min.css",
+              "src/styles.scss"
 			      ],
             "scripts": [
               "./node_modules/dygraphs/dist/dygraph.min.js",

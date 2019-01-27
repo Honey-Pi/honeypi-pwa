@@ -1,73 +1,85 @@
-<h1>Quelle auswählen</h1>
+<h3>Quelle auswählen</h3>
 <mat-radio-group class="example-radio-group" [(ngModel)]="backendService.importSrc">
-  <div>
-    <mat-radio-button class="example-radio-button" [value]="0">
+  <mat-card class="my-card">
+    <mat-radio-button class="example-radio-button" [value]="0" class="noselect">
       <strong>ThingSpeak Import</strong>
     </mat-radio-button>
-    <div *ngIf="backendService.importSrc==0">
-      <mat-form-field appearance="outline">
+
+    <mat-card-content *ngIf="backendService.importSrc==0">
+      <mat-form-field appearance="outline" style="max-width:100px">
         <mat-label>Channel-ID</mat-label>
-        <input matInput placeholder="Channel-ID" [(ngModel)]="ts.channel_id" (ngModelChange)="ts.save()">
+        <input matInput placeholder="Channel-ID" type="number" [(ngModel)]="ts.channel_id" (ngModelChange)="ts.save()">
       </mat-form-field>
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" style="max-width:180px">
         <mat-label>Read-API-Key</mat-label>
         <input matInput placeholder="Read-API-Key" [(ngModel)]="ts.api_key" (ngModelChange)="ts.save()">
       </mat-form-field>
       <br>
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" style="max-width:150px">
         <mat-label>Von</mat-label>
         <input matInput [matDatepicker]="picker" placeholder="Von" [(ngModel)]="ts.start" (ngModelChange)="ts.save()">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" style="max-width:150px">
         <mat-label>Bis</mat-label>
         <input matInput [matDatepicker]="pickerEnd" placeholder="Bis" [(ngModel)]="ts.end" (ngModelChange)="ts.save()">
         <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
         <mat-datepicker #pickerEnd></mat-datepicker>
       </mat-form-field>
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" style="max-width:150px">
         <mat-label>Anzahl Einträge</mat-label>
         <input matInput placeholder="Anzahl Einträge" type="number" [max]="8000" [(ngModel)]="ts.results" (ngModelChange)="ts.save()">
       </mat-form-field>
       <p>
-        <button mat-raised-button (click)="setTime(0, 3)">Letzte 3 Stunden </button>
-        <button mat-raised-button (click)="setTime(3)">Letzte 3 Tage</button>
-        <button mat-raised-button (click)="setTime(7)">Letzte 7 Tage</button>
+        <mat-chip-list>
+          <mat-chip (click)="setTime(0, 6)">Letzte 6 Stunden</mat-chip>
+          <mat-chip (click)="setTime(0, 24)">24 Stunden</mat-chip>
+          <mat-chip (click)="setTime(3)">3 Tage</mat-chip>
+          <mat-chip (click)="setTime(7)">7 Tage</mat-chip>
+          <mat-chip (click)="setTime(30)">30 Tage</mat-chip>
+        </mat-chip-list>
       </p>
-      <p>
-        <button mat-raised-button (click)="readTs()" color="primary">Abrufen</button>
-      </p>
+        <mat-card-actions>
+            <button mat-raised-button (click)="readTs()" color="primary">›› ThingSpeak Abrufen!</button>
+        </mat-card-actions>
+      <!--
       <hr class="my-4" />
       <pre *ngIf="backendService.tsData" class="pre-scrollable">{{backendService.tsData|json}}</pre>
-    </div>
-  </div>
-  <div>
-    <mat-radio-button class="example-radio-button" [value]="1">
-      <strong>Beelogger CSV Import</strong>
+      -->
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="my-card">
+    <mat-radio-button class="example-radio-button" [value]="1" class="noselect">
+      <strong>CSV Import</strong>
     </mat-radio-button>
-    <div *ngIf="backendService.importSrc==1">
-
-      <div class="form-group">
-        <label for="settingsFile">CSV-Datei importieren:</label>
-        <input type="file"
+    <mat-card-content *ngIf="backendService.importSrc==1">
+        <div>
+            <mat-checkbox [(ngModel)]="csv.skip_first" (change)="csv.save()">Erste Zeile auslassen</mat-checkbox>
+        </div>
+        <div>
+            <mat-form-field appearance="outline" style="max-width:100px">
+                <mat-label>Seperator</mat-label>
+                <input matInput placeholder="seperator" [(ngModel)]="csv.seperator" (change)="csv.save()">
+            </mat-form-field>
+        </div>
+        <hr />
+        <div class="form-group">
+            <label for="settingsFile">Datei von Computer importieren:</label>
+            <input type="file"
                id="settingsFile" name="settingsFile" class="form-control-file"
                accept="text/csv,.csv"
                (change)="readCsv($event)" #fileInput />
-      </div>
-      <button mat-raised-button color="primary" (click)="fileInput.click()">Auswählen</button>
-      <hr />
-      <div>
-        <mat-checkbox [(ngModel)]="csv.skip_first" (change)="csv.save()">Erste Zeile auslassen</mat-checkbox>
-      </div>
-      <div>
-        <mat-form-field appearance="outline">
-          <mat-label>Seperator</mat-label>
-          <input matInput placeholder="seperator" [(ngModel)]="csv.seperator" (change)="csv.save()">
-        </mat-form-field>
-      </div>
+        </div>
+        <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="fileInput.click()">›› CSV-Datei Auswählen</button>
+        </mat-card-actions>
+      <!--
       <pre *ngIf="backendService.csvData" class="pre-scrollable">{{csvData|json}}</pre>
-    </div>
-  </div>
+      -->
+    </mat-card-content>
+  </mat-card>
 </mat-radio-group>
-<button mat-raised-button routerLink="graph" color="primary">Zur Ansicht</button>
+<div class="clearfix">
+    <button mat-raised-button [disabled]="!backendService.isDataLoaded" [routerLink]="['/view']" color="warn" class="float-right">Zur Messdaten-Ansicht</button>
+</div>

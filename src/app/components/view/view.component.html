@@ -4,7 +4,10 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-<strong class="text-truncate">Letzte Messung vom {{backendService.tsDataLastLine.time.toLocaleString('de-DE')}}</strong>
+<div class="clearfix">
+    <mat-bar-button [options]="barButtonOptions" (click)="updateTsData()" class="float-right"></mat-bar-button>
+    <strong class="text-truncate">Letzte Messung vom {{backendService.tsDataLastLine.time.toLocaleString('de-DE')}}</strong>
+</div>
 <div class="row">
   <ng-container *ngFor="let sensor of backendService.getTsFieldForMeasurementView();let i=index; let odd=odd">
     <div class="col-6">

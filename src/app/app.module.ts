@@ -11,12 +11,15 @@ import {RouterModule, Routes} from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { ViewComponent } from './components/view/view.component';
 import { SettingsComponent } from './components/settings/settings.component';
+import {FooterComponent} from './components/footer/footer.component';
 
 import {WebStorageModule} from 'ngx-store';
 import {ChartsModule} from 'ng2-charts';
 import {NgDygraphsModule} from 'ng-dygraphs';
 import { ColorPickerModule } from 'ngx-color-picker';
 import '../../node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js';
+import {MatProgressButtonsModule} from 'mat-progress-buttons';
+
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent, pathMatch: 'full' },
@@ -32,7 +35,8 @@ const appRoutes: Routes = [
     NavbarComponent,
     HomeComponent,
     ViewComponent,
-    SettingsComponent
+    SettingsComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +51,8 @@ const appRoutes: Routes = [
     WebStorageModule,
     ChartsModule,
     NgDygraphsModule,
-    ColorPickerModule
+    ColorPickerModule,
+    MatProgressButtonsModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
