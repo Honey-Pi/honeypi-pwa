@@ -44,9 +44,11 @@ export class ViewComponent implements OnInit {
       scales: {
           xAxes: [{
             type: 'time',
-            distribution: 'series',
+            distribution: 'linear',
             ticks: {
-              source: 'labels'
+                source: 'labels',
+                autoSkip: true,
+                maxTicksLimit: 20
             }
           }]
         }

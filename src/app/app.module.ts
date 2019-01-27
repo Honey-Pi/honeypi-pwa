@@ -19,13 +19,14 @@ import {NgDygraphsModule} from 'ng-dygraphs';
 import { ColorPickerModule } from 'ngx-color-picker';
 import '../../node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js';
 import {MatProgressButtonsModule} from 'mat-progress-buttons';
+import {AuthGuard} from './services/auth.guard';
 
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent, pathMatch: 'full' },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'view', component: ViewComponent },
-  { path: 'settings', component: SettingsComponent },
+  { path: 'view', component: ViewComponent, canActivate: [AuthGuard] },
+  { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard] },
   { path: '**', component: HomeComponent }
 ];
 
@@ -41,7 +42,7 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     RouterModule.forRoot(
-      appRoutes,
+      appRoutes
     ),
     HttpClientModule,
     BrowserAnimationsModule,
@@ -54,7 +55,7 @@ const appRoutes: Routes = [
     ColorPickerModule,
     MatProgressButtonsModule.forRoot()
   ],
-  providers: [],
+  providers: [AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
