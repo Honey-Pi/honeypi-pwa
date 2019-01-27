@@ -1,0 +1,4 @@
+# Additional Nginx instructions (nginx-Reverse-Proxyserver)
+location ~ ^/ {
+	try_files $uri $uri/ /index.html;
+}
