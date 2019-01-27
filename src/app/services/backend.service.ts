@@ -37,11 +37,11 @@ export class BackendService {
   }
 
   public readTsChannel(channel_id: number,
-                       format?: string = 'json',
-                       api_key?: string,
-                       results?: number,
-                       start?: Date,
-                       end?: Date): Observable<Object> {
+                       format: string = 'json',
+                       api_key: string,
+                       results: number,
+                       start: Date,
+                       end: Date): Observable<Object> {
     let append = '?';
     if (api_key) {
       append += 'api_key=' + api_key;

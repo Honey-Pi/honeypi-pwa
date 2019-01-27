@@ -67,16 +67,15 @@ export class ViewComponent implements OnInit {
     rollPeriod: 1,              // Standard Mittelwert
     showRoller: false,           // Anzeigen zum ändern
     labelsSeparateLines: true,  // Beschriftung der Linien je in einer separaten Zeile anzeigen
-    labelsDivStyles: {         // Labels in Kasten anzeigen
+    /*labelsDivStyles: {         // Labels in Kasten anzeigen
       'backgroundColor': 'rgba(200, 200, 255, 0.75)',
       'padding': '4px',
       'border': '1px solid black',
       'borderRadius': '10px',
-      'boxShadow': '4px 4px 4px #888'  },
+      'boxShadow': '4px 4px 4px #888'  },*/
     drawPoints: false,           // Zeigt Punkte an
     colors: this.backendService.sensorSettings.colors,
     visibility: this.backendService.sensorSettings.visibility,
-    displayAnnotations: true,
     xlabel: 'Uhrzeit',
     labelsDivStyles: {
       'text-align': 'right',

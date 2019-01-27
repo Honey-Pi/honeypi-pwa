@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
   }
 
-  setTime(days: number, hours?: number = 0) {
+  setTime(days: number, hours: number = 0) {
     const d: Date = new Date();
     d.setDate(d.getDate() - days);
     d.setHours(d.getHours() - hours);
