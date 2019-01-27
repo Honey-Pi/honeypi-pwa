@@ -41,12 +41,6 @@ export class ViewComponent implements OnInit {
    */
   // data property needs to be defined as attribute in the component and in native array format http://dygraphs.com/data.html#array
   public data = this.getTsDataForDygraph();
-    // [[new Date('2008/05/07'), 75, 25],[new Date('2008/05/08'), 70, 30],[new Date('2008/05/09'), 80, 23]];
-  getTsFieldTitlesForDygraph() {
-    const labels = this.backendService.getTsFieldTitles();
-    labels.unshift('Uhrzeit');
-    return labels;
-  }
   // options object needs to be defined as attribute in the component and consist of valid options http://dygraphs.com/options.html
   public options = {
     width: 'auto',
@@ -95,6 +89,12 @@ export class ViewComponent implements OnInit {
       return 'rgb(' + r + ', ' + g + ', ' + b + ')';
     }
   }
+    // [[new Date('2008/05/07'), 75, 25],[new Date('2008/05/08'), 70, 30],[new Date('2008/05/09'), 80, 23]];
+  getTsFieldTitlesForDygraph() {
+    const labels = this.backendService.getTsFieldTitles();
+    labels.unshift('Uhrzeit');
+    return labels;
+  }
 
   getTsDataForDygraph() {
     const rows = [];
@@ -108,17 +108,6 @@ export class ViewComponent implements OnInit {
       rows.push(row);
     }
     return rows;
-  }
-
-  get tsDataLastLine() {
-    const lastFeed = this.backendService.tsData.feeds.slice(-1)[0];
-    const measurements = [];
-    for (const field in lastFeed) {
-      if (field.indexOf('field') !== -1) {
-        measurements.push(<number>parseFloat(lastFeed[field]));
-      }
-    }
-    return {time: new Date(lastFeed.created_at), fields: measurements};
   }
 
   getLineChartColors() {

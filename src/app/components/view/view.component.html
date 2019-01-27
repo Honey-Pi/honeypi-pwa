@@ -4,27 +4,30 @@
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
-<strong>Letzte Messung vom {{tsDataLastLine.time.toLocaleString('de-DE')}}</strong>
-<ng-container *ngFor="let sensor of backendService.getTsFieldTitles();let i=index">
-  <ng-container *ngIf="backendService.sensorSettings.visibility[i] && tsDataLastLine.fields[i]">
-    <mat-card class="col-6">
-      <mat-card-header>
-        <mat-card-title>{{sensor}}</mat-card-title>
-        <mat-card-subtitle>{{tsDataLastLine.fields[i]}} {{backendService.sensorSettings.units[i]}}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-progress-spinner
-          color="accent"
-          mode="determinate"
-          [value]="tsDataLastLine.fields[i]"
-          [strokeWidth]="14"
-          [diameter]="40"
-          [matBadge]="backendService.sensorSettings.units[i]" matBadgeSize="medium" [matBadgeOverlap]="true" matBadgeColor="primary" matBadgePosition="above after">
-        </mat-progress-spinner>
-      </mat-card-content>
-    </mat-card>
+<strong class="text-truncate">Letzte Messung vom {{backendService.tsDataLastLine.time.toLocaleString('de-DE')}}</strong>
+<div class="row">
+  <ng-container *ngFor="let sensor of backendService.getTsFieldTitles(true);let i=index; let odd=odd">
+    <div class="col-6">
+      <mat-card style="width:100%">
+        <mat-card-header>
+          <mat-card-title>{{sensor}}</mat-card-title>
+          <mat-card-subtitle>{{backendService.tsDataLastLine.fields[i]}} {{backendService.sensorSettings.units[i]}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-progress-spinner class="mx-auto"
+            color="accent"
+            mode="determinate"
+            [value]="backendService.tsDataLastLine.fields[i]"
+            [strokeWidth]="14"
+            [diameter]="40"
+            [matBadge]="backendService.sensorSettings.units[i]" matBadgeSize="medium" [matBadgeOverlap]="true" matBadgeColor="primary" matBadgePosition="above after">
+          </mat-progress-spinner>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div [ngClass]="{'col-12': (i+1) % 2 == 0}" [ngStyle]="{'margin-bottom.px': ((i+1) % 2 == 0) ? 10 : 0}"></div>
   </ng-container>
-</ng-container>
+</div>
 <h3>Chart.js</h3>
 <div class="row">
   <div class="col-12">

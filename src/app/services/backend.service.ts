@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import {Observable, Subject} from 'rxjs';
-import {HttpClient, HttpEventType, HttpRequest, HttpResponse} from '@angular/common/http';
-import {environment} from '../../environments/environment';
+import {Observable} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
 import {LocalStorage} from 'ngx-store';
 
 @Injectable({
@@ -11,18 +10,20 @@ export class BackendService {
 
   private tsApiUrl = 'https://api.thingspeak.com';
 
+  private tsCountFields = 8;
+
   @LocalStorage() public importSrc = 0;
   @LocalStorage() public tsData: any = null;
   @LocalStorage() public csvData: any = null;
   @LocalStorage() sensorSettings = {
-    colors: BackendService.initRandomColors(8),
+    colors: BackendService.initRandomColors(this.tsCountFields),
     visibility: [],
     units: []
   };
 
   public unitList = ['°C', 'K', '°F', 'mbar', 'kg', 'AQI', 'mm', '%', 'V'];
 
-  static initRandomColors(count: number) {
+  static initRandomColors(count = 8) {
     const colors: string[] = [];
     for (let i = 0; i < count; i++) {
       colors.push('#' + (Math.random() * 0xFFFFFF << 0).toString(16));
@@ -31,10 +32,6 @@ export class BackendService {
   }
 
   constructor(private http: HttpClient) { }
-
-  public saveUser(newUser: any): Observable<Object> {
-    return this.http.post(environment.apiURL + '/users', newUser);
-  }
 
   public readTsChannel(channel_id: number,
                        format: string = 'json',
@@ -65,10 +62,27 @@ export class BackendService {
     return this.tsData.channel['field' + fieldNumber];
   }
 
-  getTsFieldTitles() {
+  get tsDataLastLine() {
+        const lastFeed = this.tsData.feeds.slice(-1)[0];
+        const measurements = [];
+        for (const field in lastFeed) {
+            if (field.indexOf('field') !== -1) {
+                measurements.push(<number>parseFloat(lastFeed[field]));
+            }
+        }
+        return {time: new Date(lastFeed.created_at), fields: measurements};
+    }
+
+  getTsFieldTitles(filter = false) {
     const row = [];
-    for (let i = 1; i <= 8; i++) {
-      row.push(this.getTsFieldTitle(i));
+    for (let i = 0; i < this.tsCountFields; i++) {
+      if (filter) {
+        if (this.sensorSettings.visibility[i] && this.tsDataLastLine.fields[i]) {
+            row.push(this.getTsFieldTitle(i + 1));
+        }
+      } else {
+        row.push(this.getTsFieldTitle(i + 1));
+      }
     }
     return row;
   }
