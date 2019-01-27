@@ -1,0 +1,17 @@
+<ul *ngFor="let sensor of sensorList;let i=index" class="list-group">
+  <li class="list-group-item">
+    <mat-checkbox [(ngModel)]="backendService.sensorSettings.visibility[i]" (change)="backendService.sensorSettings.save()">
+      <span>{{sensor}}</span>
+    </mat-checkbox>
+    <div class="inline-block float-right">
+    <mat-form-field style="width:60px;margin-right:20px;">
+      <select matNativeControl [(ngModel)]="backendService.sensorSettings.units[i]" (change)="backendService.sensorSettings.save()">
+        <option *ngFor="let unit of backendService.unitList" [value]="unit">{{unit}}</option>
+      </select>
+    </mat-form-field>
+    <input [(colorPicker)]="backendService.sensorSettings.colors[i]"
+           [style.background]="backendService.sensorSettings.colors[i]" style="width:25px;height:25px"
+           (colorPickerChange)="backendService.sensorSettings.save()"/>
+    </div>
+  </li>
+</ul>

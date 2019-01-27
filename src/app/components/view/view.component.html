@@ -1,0 +1,50 @@
+<div class="alert alert-warning alert-dismissible fade show" role="alert" *ngIf="!backendService.csvData && !backendService.tsData">
+  Wähle zuerst im Reiter <strong>Auswahl</strong> die Messdaten aus.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<strong>Letzte Messung vom {{tsDataLastLine.time.toLocaleString('de-DE')}}</strong>
+<ng-container *ngFor="let sensor of backendService.getTsFieldTitles();let i=index">
+  <ng-container *ngIf="backendService.sensorSettings.visibility[i] && tsDataLastLine.fields[i]">
+    <mat-card class="col-6">
+      <mat-card-header>
+        <mat-card-title>{{sensor}}</mat-card-title>
+        <mat-card-subtitle>{{tsDataLastLine.fields[i]}} {{backendService.sensorSettings.units[i]}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-progress-spinner
+          color="accent"
+          mode="determinate"
+          [value]="tsDataLastLine.fields[i]"
+          [strokeWidth]="14"
+          [diameter]="40"
+          [matBadge]="backendService.sensorSettings.units[i]" matBadgeSize="medium" [matBadgeOverlap]="true" matBadgeColor="primary" matBadgePosition="above after">
+        </mat-progress-spinner>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
+</ng-container>
+<h3>Chart.js</h3>
+<div class="row">
+  <div class="col-12">
+    <div style="display: block;">
+      <canvas baseChart width="400" height="400"
+              [datasets]="lineChartData"
+              [labels]="lineChartLabels"
+              [options]="lineChartOptions"
+              [colors]="lineChartColors"
+              [legend]="lineChartLegend"
+              [chartType]="lineChartType"
+              (chartHover)="chartHovered($event)"
+              (chartClick)="chartClicked($event)"></canvas>
+    </div>
+  </div>
+</div>
+<h3>Dygraph</h3>
+<ng-dygraphs
+  [data]="data"
+  [options]="options"
+  [customVisibility]="false">
+</ng-dygraphs>
+
