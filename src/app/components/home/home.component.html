@@ -31,6 +31,19 @@
         <mat-label>Anzahl Einträge</mat-label>
         <input matInput placeholder="Anzahl Einträge" type="number" [max]="8000" [(ngModel)]="ts.results" (ngModelChange)="ts.save()">
       </mat-form-field>
+        <mat-form-field appearance="outline" style="max-width:150px">
+            <mat-label>Einträge entdichten</mat-label>
+            <mat-select [(value)]="ts.timescale" (ngModelChange)="ts.save()">
+                <mat-option [value]="null">Keine Beschränkung</mat-option>
+                <mat-option [value]="10">6 Einträge/Stunde</mat-option>
+                <mat-option [value]="15">4 Einträge/Stunde</mat-option>
+                <mat-option [value]="30">2 Einträge/Stunde</mat-option>
+                <mat-option [value]="60">24 Einträge/Tag</mat-option>
+                <mat-option [value]="240">6 Einträge/Tag</mat-option>
+                <mat-option [value]="720">2 Einträge/Tag</mat-option>
+                <mat-option [value]="1440">1 Eintrag/Tag</mat-option>
+            </mat-select>
+        </mat-form-field>
       <p>
         <mat-chip-list>
           <mat-chip (click)="setTime(0, 6)">Letzte 6 Stunden</mat-chip>

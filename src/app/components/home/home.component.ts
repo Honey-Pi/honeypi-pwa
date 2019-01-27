@@ -14,7 +14,8 @@ export class HomeComponent implements OnInit {
     api_key: 'QPAXQ8XI1Q0P6T11',
     start: null,
     end: null,
-    results: null
+    results: null,
+    timescale: 15
   };
 
   @LocalStorage() public csv: any = {
@@ -38,7 +39,7 @@ export class HomeComponent implements OnInit {
   }
 
   readTs() {
-    this.backendService.readTsChannel(this.ts.channel_id, 'json', this.ts.api_key, this.ts.results, this.ts.start, this.ts.end).subscribe(
+    this.backendService.readTsChannel(this.ts.channel_id, 'json', this.ts.api_key, this.ts.results, this.ts.start, this.ts.end, this.ts.timescale).subscribe(
       (val) => {
         this.backendService.tsData = val;
       },

@@ -50,7 +50,8 @@ export class BackendService {
                        api_key: string,
                        results: number,
                        start: Date,
-                       end: Date): Observable<Object> {
+                       end: Date,
+                       timescale: number): Observable<Object> {
     let append = '?';
     if (api_key) {
       append += 'api_key=' + api_key;
@@ -64,6 +65,9 @@ export class BackendService {
     append += '&timezone=Europe/Berlin';
     if (results) {
       append += '&results=' + results;
+    }
+    if (timescale) {
+      append += '&timescale=' + timescale;
     }
 
     return this.http.get(this.tsApiUrl + '/channels/' + channel_id + '/feeds.' + format + append);
