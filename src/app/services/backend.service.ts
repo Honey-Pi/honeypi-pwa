@@ -8,28 +8,36 @@ import {LocalStorage} from 'ngx-store';
 })
 export class BackendService {
 
-  private tsApiUrl = 'https://api.thingspeak.com';
+    private tsApiUrl = 'https://api.thingspeak.com';
 
-  private tsCountFields = 8;
+    private tsCountFields = 8;
 
-  @LocalStorage() public importSrc = 0;
-  @LocalStorage() public tsData: any = null;
-  @LocalStorage() public csvData: any = null;
-  @LocalStorage() sensorSettings = {
-    colors: BackendService.initRandomColors(this.tsCountFields),
-    visibility: [],
-    units: []
-  };
+    @LocalStorage() public importSrc = 0;
+    @LocalStorage() public tsData: any = null;
+    @LocalStorage() public csvData: any = null;
+    @LocalStorage() sensorSettings = {
+        colors: BackendService.initRandomColors(this.tsCountFields),
+        visibility: BackendService.initVisibleFields(this.tsCountFields),
+        units: []
+    };
 
-  public unitList = ['°C', 'K', '°F', 'mbar', 'kg', 'AQI', 'mm', '%', 'V'];
+    public unitList = ['°C', 'K', '°F', 'mbar', 'kg', 'AQI', 'mm', '%', 'V'];
 
-  static initRandomColors(count = 8) {
+    static initRandomColors(count = 8) {
     const colors: string[] = [];
     for (let i = 0; i < count; i++) {
       colors.push('#' + (Math.random() * 0xFFFFFF << 0).toString(16));
     }
     return colors;
-  }
+    }
+
+    static initVisibleFields(count = 8) {
+        const fields: boolean[] = [];
+        for (let i = 0; i < count; i++) {
+            fields.push(true);
+        }
+        return fields;
+    }
 
   constructor(private http: HttpClient) { }
 
@@ -54,12 +62,11 @@ export class BackendService {
       append += '&results=' + results;
     }
 
-
     return this.http.get(this.tsApiUrl + '/channels/' + channel_id + '/feeds.' + format + append);
   }
 
   getTsFieldTitle(fieldNumber: number) {
-    return this.tsData.channel['field' + fieldNumber];
+    return this.tsData.channel['field' + (fieldNumber + 1)];
   }
 
   get tsDataLastLine() {
@@ -78,14 +85,29 @@ export class BackendService {
     for (let i = 0; i < this.tsCountFields; i++) {
       if (filter) {
         if (this.sensorSettings.visibility[i] && this.tsDataLastLine.fields[i]) {
-            row.push(this.getTsFieldTitle(i + 1));
+            row.push(this.getTsFieldTitle(i));
         }
       } else {
-        row.push(this.getTsFieldTitle(i + 1));
+        row.push(this.getTsFieldTitle(i));
       }
     }
     return row;
   }
+
+    getTsFieldForMeasurementView(): {title, visibility, data, unit}[] {
+        const row = [];
+        for (let i = 0; i < this.tsCountFields; i++) {
+            if (this.sensorSettings.visibility[i] && this.tsDataLastLine.fields[i]) {
+                row.push({
+                    title: this.getTsFieldTitle(i),
+                    visibility: this.sensorSettings.visibility[i],
+                    data: this.tsDataLastLine.fields[i],
+                    unit: this.sensorSettings.units[i]
+                });
+            }
+        }
+        return row;
+    }
 
 
 }

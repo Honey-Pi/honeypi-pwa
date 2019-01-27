@@ -11,10 +11,12 @@ import {RouterModule, Routes} from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { ViewComponent } from './components/view/view.component';
 import { SettingsComponent } from './components/settings/settings.component';
+
 import {WebStorageModule} from 'ngx-store';
 import {ChartsModule} from 'ng2-charts';
 import {NgDygraphsModule} from 'ng-dygraphs';
 import { ColorPickerModule } from 'ngx-color-picker';
+import '../../node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js';
 
 const appRoutes: Routes = [
   { path: 'home', component: HomeComponent, pathMatch: 'full' },

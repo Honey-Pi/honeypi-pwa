@@ -34,8 +34,7 @@
 			      ],
             "scripts": [
               "./node_modules/dygraphs/dist/dygraph.min.js",
-              "./node_modules/chart.js/src/chart.js"
-
+              "./node_modules/chart.js/dist/Chart.bundle.js"
             ]
           },
           "configurations": {

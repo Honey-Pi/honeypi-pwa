@@ -22,17 +22,33 @@ export class ViewComponent implements OnInit {
   public lineChartData: Array<any> = this.getTsLineChartData();
   public lineChartLabels: Array<any> = this.getDataTsTimeLabels();
   public lineChartOptions: any = {
-    responsive: true,
-    scales: {
-      xAxes: [{
-        type: 'time',
-        distribution: 'series',
-        ticks: {
-          source: 'labels'
+      responsive: true,
+      plugins: {
+          datalabels: {
+              backgroundColor: function(context) {
+                  return context.dataset.backgroundColor;
+              },
+              borderRadius: 4,
+              color: 'white',
+              font: {
+                  weight: 'bold'
+              },
+              formatter: Math.round,
+              display: (context: any) => {
+                  return context.dataIndex % 2; // display labels with an odd index
+              },
+          }
+      },
+      scales: {
+          xAxes: [{
+            type: 'time',
+            distribution: 'series',
+            ticks: {
+              source: 'labels'
+            }
+          }]
         }
-      }]
-    }
-  };
+      };
   public lineChartColors: Array<any> = this.getLineChartColors();
   public lineChartLegend = true;
   public lineChartType = 'line';
@@ -89,7 +105,7 @@ export class ViewComponent implements OnInit {
       return 'rgb(' + r + ', ' + g + ', ' + b + ')';
     }
   }
-    // [[new Date('2008/05/07'), 75, 25],[new Date('2008/05/08'), 70, 30],[new Date('2008/05/09'), 80, 23]];
+
   getTsFieldTitlesForDygraph() {
     const labels = this.backendService.getTsFieldTitles();
     labels.unshift('Uhrzeit');
@@ -97,6 +113,7 @@ export class ViewComponent implements OnInit {
   }
 
   getTsDataForDygraph() {
+      // [[new Date('2008/05/07'), 75, 25],[new Date('2008/05/08'), 70, 30],[new Date('2008/05/09'), 80, 23]];
     const rows = [];
     for (const feed of this.backendService.tsData.feeds) {
       const row: any[] = [<Date>new Date(feed.created_at)];
@@ -143,15 +160,18 @@ export class ViewComponent implements OnInit {
   getDataTsPerField(fieldNumber: number) {
     const labels: Array<Date> = [];
     for (const feed of this.getDataTs()) {
-      labels.push(feed['field' + fieldNumber]);
+      labels.push(feed['field' + (fieldNumber + 1)]);
     }
     return labels;
   }
 
   getTsLineChartData() {
     const row = [];
-    for (let i = 1; i <= 8; i++) {
-      row.push({data: this.getDataTsPerField(i), label: this.backendService.getTsFieldTitle(i)});
+    for (let i = 0; i < this.backendService.getTsFieldTitles().length; i++) {
+      row.push({    data: this.getDataTsPerField(i),
+                    label: this.backendService.getTsFieldTitle(i),
+                    hidden: !this.backendService.sensorSettings.visibility[i]
+      });
     }
     return row;
   }
