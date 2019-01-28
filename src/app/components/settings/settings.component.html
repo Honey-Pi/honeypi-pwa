@@ -5,12 +5,15 @@
     </mat-checkbox>
     <div class="inline-block float-right">
     <mat-form-field style="width:60px;margin-right:20px;">
-      <select matNativeControl [(ngModel)]="backendService.sensorSettings.units[i]" (change)="backendService.sensorSettings.save()">
-        <option *ngFor="let unit of backendService.unitList" [value]="unit">{{unit}}</option>
-      </select>
+      <mat-select [(value)]="backendService.sensorSettings.units[i]" (selectionChange)="backendService.sensorSettings.save()">
+        <mat-option *ngFor="let unit of backendService.unitList" [value]="unit">{{unit}}</mat-option>
+      </mat-select>
     </mat-form-field>
     <input [(colorPicker)]="backendService.sensorSettings.colors[i]"
            [style.background]="backendService.sensorSettings.colors[i]" style="width:25px;height:25px"
+           cpPosition="left"
+           cpAlphaChannel="disabled"
+           cpOutputFormat="hex"
            (colorPickerChange)="backendService.sensorSettings.save()"/>
     </div>
   </li>
