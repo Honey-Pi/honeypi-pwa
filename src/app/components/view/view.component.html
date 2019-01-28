@@ -7,7 +7,7 @@
 <!-- Latest Measurement Values -->
 <div class="row">
   <ng-container *ngFor="let sensor of backendService.getTsFieldForMeasurementView();let i=index; let odd=odd">
-    <div class="col-6">
+    <div class="col-6" [ngClass]="{'my-col-left': (i+1) % 2 !== 0, 'my-col-right': (i+1) % 2 == 0}" >
       <mat-card style="width:100%">
         <mat-card-header>
           <mat-card-title>{{sensor.title}}</mat-card-title>
@@ -30,7 +30,7 @@
 </div>
 <div class="clearfix">
     <mat-bar-button [options]="barButtonOptions" (click)="updateTsData()" class="float-right"></mat-bar-button>
-    <strong class="text-truncate">Letzte Messung vom {{backendService.tsDataLastLine.time.toLocaleString('de-DE')}}</strong>
+    <strong class="text-truncate">Letzte Messung: {{backendService.tsDataLastLine.time.toLocaleString('de-DE')}}</strong>
 </div>
 <!-- Chart.js -->
 <mat-card style="margin-top:10px;margin-bottom:10px;">
