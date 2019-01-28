@@ -3,16 +3,16 @@
     <img src="assets/honeypi-brand.svg" width="30" height="30" alt="">
     <span class="d-none d-sm-inline" style="padding-left:10px">Dashboard</span>
   </a>
-  <div class="collapse navbar-collapse">
+  <div class="collapse navbar-collapse" style="margin-left:-10px">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item" routerLinkActive="active">
         <a class="nav-link" routerLink="home">Auswahl</a>
       </li>
       <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" routerLink="view">Ansicht</a>
+        <a class="nav-link" [class.disabled]="(isDisabled) ? true : null" routerLink="view">Ansicht</a>
       </li>
       <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" routerLink="settings">Einstellungen</a>
+        <a class="nav-link" [class.disabled]="(isDisabled) ? true : null" routerLink="settings">Einstellungen</a>
       </li>
     </ul>
   </div>

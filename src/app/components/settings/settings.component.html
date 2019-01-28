@@ -9,11 +9,12 @@
         <mat-option *ngFor="let unit of backendService.unitList" [value]="unit">{{unit}}</mat-option>
       </mat-select>
     </mat-form-field>
-    <input [(colorPicker)]="backendService.sensorSettings.colors[i]"
+    <input type="button" [(colorPicker)]="backendService.sensorSettings.colors[i]"
            [style.background]="backendService.sensorSettings.colors[i]" style="width:25px;height:25px"
            cpPosition="left"
            cpAlphaChannel="disabled"
            cpOutputFormat="hex"
+           [cpDisableInput]="true"
            (colorPickerChange)="backendService.sensorSettings.save()"/>
     </div>
   </li>
