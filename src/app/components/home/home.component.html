@@ -26,10 +26,12 @@
         <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
         <mat-datepicker #pickerEnd></mat-datepicker>
       </mat-form-field>
+        <!--
       <mat-form-field appearance="outline" style="max-width:150px">
         <mat-label>Anzahl Einträge</mat-label>
         <input matInput placeholder="Anzahl Einträge" type="number" [max]="8000" [(ngModel)]="ts.results" (ngModelChange)="ts.save()">
       </mat-form-field>
+      -->
         <mat-form-field appearance="outline" style="max-width:150px">
             <mat-label>Einträge entdichten</mat-label>
             <mat-select [(value)]="ts.timescale" (selectionChange)="ts.save()">
@@ -93,5 +95,5 @@
   </mat-card>
 </mat-radio-group>
 <div class="clearfix">
-    <button mat-raised-button [disabled]="!backendService.isDataLoaded" [routerLink]="['/view']" color="warn" class="float-right">Zur Messdaten-Ansicht</button>
+    <button mat-raised-button [disabled]="!backendService.isDataLoaded" [routerLink]="['/view']" color="accent" class="float-right">Zur Messdaten-Ansicht</button>
 </div>

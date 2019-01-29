@@ -30,7 +30,7 @@ export class ViewComponent implements OnInit {
     public lineChartOptions: any = {
       responsive: true,
       plugins: {
-          datalabels: {
+      datalabels: {
               backgroundColor: function(context) {
                   return context.dataset.backgroundColor;
               },
@@ -41,7 +41,8 @@ export class ViewComponent implements OnInit {
               },
               formatter: Math.round,
               display: (context: any) => {
-                  return context.dataIndex % 2; // display labels with an odd index
+                  // return context.dataIndex % 2; // display labels with an odd index
+                  return false; // never display labels
               },
           }
       },

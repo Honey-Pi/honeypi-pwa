@@ -4,3 +4,18 @@
 .my-col-right {
   padding-left: 5px;
 }
+
+/* Dygraph */
+::ng-deep .dygraph-legend {
+  right: 0 !important;
+  background-color:rgba(155, 160, 152, 0.47) !important;
+  padding: 4px;
+  border: 1px solid #dcddda;
+  border-radius: 4px;
+  pointer-events: none;
+  max-width:180px;
+}
+::ng-deep .ng-dygraphs-chart-container {
+  background-color: transparent !important;
+  padding: 0 !important;
+}
