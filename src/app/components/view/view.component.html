@@ -65,11 +65,10 @@
                 [(ngModel)]="showDygraph" class="noselect">
             <strong>Dygraph</strong>
         </mat-slide-toggle>
-        <ng-dygraphs *ngIf="showDygraph"
+        <ngx-dygraphs *ngIf="showDygraph"
                 [data]="data"
-                [options]="options"
-                [customVisibility]="false">
-        </ng-dygraphs>
+                [options]="options">
+        </ngx-dygraphs>
     </mat-card-content>
 </mat-card>
 

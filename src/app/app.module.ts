@@ -15,7 +15,7 @@ import {FooterComponent} from './components/footer/footer.component';
 
 import {WebStorageModule} from 'ngx-store';
 import {ChartsModule} from 'ng2-charts';
-import {NgDygraphsModule} from 'ng-dygraphs';
+import {NgxDygraphsModule} from 'ngx-dygraphs';
 import { ColorPickerModule } from 'ngx-color-picker';
 import '../../node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js';
 import {MatProgressButtonsModule} from 'mat-progress-buttons';
@@ -51,7 +51,7 @@ const appRoutes: Routes = [
     ReactiveFormsModule,
     WebStorageModule,
     ChartsModule,
-    NgDygraphsModule,
+    NgxDygraphsModule,
     ColorPickerModule,
     MatProgressButtonsModule.forRoot()
   ],
