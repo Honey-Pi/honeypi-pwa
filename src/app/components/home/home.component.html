@@ -5,46 +5,70 @@
     </mat-radio-button>
 
     <mat-card-content *ngIf="backendService.importSrc==0">
-      <mat-form-field appearance="outline" style="max-width:100px">
-        <mat-label>Channel-ID</mat-label>
-        <input matInput placeholder="Channel-ID" type="number" [(ngModel)]="ts.channel_id" (ngModelChange)="ts.save()">
-      </mat-form-field>
-      <mat-form-field appearance="outline" style="max-width:180px">
-        <mat-label>Read-API-Key</mat-label>
-        <input matInput placeholder="Read-API-Key" [(ngModel)]="ts.api_key" (ngModelChange)="ts.save()">
-      </mat-form-field>
-      <br>
-      <mat-form-field appearance="outline" style="max-width:150px">
-        <mat-label>Von</mat-label>
-        <input matInput [matDatepicker]="picker" placeholder="Von" [(ngModel)]="ts.start" (ngModelChange)="ts.save()">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-      <mat-form-field appearance="outline" style="max-width:150px">
-        <mat-label>Bis</mat-label>
-        <input matInput [matDatepicker]="pickerEnd" placeholder="Bis" [(ngModel)]="ts.end" (ngModelChange)="ts.save()">
-        <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
-        <mat-datepicker #pickerEnd></mat-datepicker>
-      </mat-form-field>
+
+          <mat-form-field appearance="outline" style="max-width:100px">
+            <mat-label>Channel-ID</mat-label>
+            <input matInput placeholder="Channel-ID" type="number"
+                   [(ngModel)]="tsSettings.channel_id" (ngModelChange)="saveSettings()">
+          </mat-form-field>
+        <p>
+            <mat-slide-toggle
+                color="accent" class="noselect"
+                [(ngModel)]="tsSettings.public" (ngModelChange)="saveSettings()">
+                Public Channel
+            </mat-slide-toggle>
+            <mat-form-field appearance="outline" style="max-width:180px;margin-left:15px" *ngIf="!tsSettings.public">
+                <mat-label>Read-API-Key</mat-label>
+                <input matInput placeholder="Read-API-Key"
+                   [(ngModel)]="tsSettings.api_key" (ngModelChange)="saveSettings()">
+            </mat-form-field>
+        </p>
+          <mat-form-field appearance="outline" style="max-width:150px">
+            <mat-label>Von</mat-label>
+            <input matInput [matDatepicker]="picker" placeholder="Von"
+                   [(ngModel)]="tsSettings.start" (ngModelChange)="saveSettings()">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="outline" style="max-width:150px">
+            <mat-label>Bis</mat-label>
+            <input matInput [matDatepicker]="pickerEnd" placeholder="Bis"
+                   [(ngModel)]="tsSettings.end" (ngModelChange)="saveSettings()">
+            <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+            <mat-datepicker #pickerEnd></mat-datepicker>
+          </mat-form-field>
         <!--
-      <mat-form-field appearance="outline" style="max-width:150px">
-        <mat-label>Anzahl Einträge</mat-label>
-        <input matInput placeholder="Anzahl Einträge" type="number" [max]="8000" [(ngModel)]="ts.results" (ngModelChange)="ts.save()">
-      </mat-form-field>
-      -->
-        <mat-form-field appearance="outline" style="max-width:150px">
-            <mat-label>Einträge entdichten</mat-label>
-            <mat-select [(value)]="ts.timescale" (selectionChange)="ts.save()">
-                <mat-option [value]="null">Keine Beschränkung</mat-option>
-                <mat-option [value]="10">6 Einträge/Stunde</mat-option>
-                <mat-option [value]="15">4 Einträge/Stunde</mat-option>
-                <mat-option [value]="30">2 Einträge/Stunde</mat-option>
-                <mat-option [value]="60">24 Einträge/Tag</mat-option>
-                <mat-option [value]="240">6 Einträge/Tag</mat-option>
-                <mat-option [value]="720">2 Einträge/Tag</mat-option>
-                <mat-option [value]="1440">1 Eintrag/Tag</mat-option>
-            </mat-select>
-        </mat-form-field>
+          <mat-form-field appearance="outline" style="max-width:150px">
+            <mat-label>Anzahl Einträge</mat-label>
+            <input matInput placeholder="Anzahl Einträge" type="number" [max]="8000"
+            [(ngModel)]="tsSettings.results" (ngModelChange)="saveSettings()">
+          </mat-form-field>
+          -->
+        <p class="noselect">
+            Anzahl geladener Einträge:
+            <mat-slider
+                thumbLabel
+                [displayWith]="formatLabel"
+                tickInterval="auto"
+                [(value)]="tsSettings.results" (change)="saveSettings()"
+                [min]="tsSettings.results_min"
+                [max]="tsSettings.results_max"></mat-slider>
+        </p>
+        <p>
+            <mat-form-field appearance="outline" style="max-width:150px">
+                <mat-label>Anzahl Einträge/Zeit</mat-label>
+                <mat-select [(value)]="tsSettings.timescale" (selectionChange)="saveSettings()">
+                    <mat-option [value]="null">Keine Beschränkung</mat-option>
+                    <mat-option [value]="30">2 Einträge/Stunde</mat-option>
+                    <mat-option [value]="15">4 Einträge/Stunde</mat-option>
+                    <mat-option [value]="10">6 Einträge/Stunde</mat-option>
+                    <mat-option [value]="60">24 Einträge/Tag</mat-option>
+                    <mat-option [value]="240">6 Einträge/Tag</mat-option>
+                    <mat-option [value]="720">2 Einträge/Tag</mat-option>
+                    <mat-option [value]="1440">1 Eintrag/Tag</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </p>
       <p>
         <mat-chip-list>
           <mat-chip (click)="setTime(0, 6)">Letzte 6 Stunden</mat-chip>
@@ -69,12 +93,12 @@
     </mat-radio-button>
     <mat-card-content *ngIf="backendService.importSrc==1">
         <div>
-            <mat-checkbox [(ngModel)]="csv.skip_first" (change)="csv.save()">Erste Zeile auslassen</mat-checkbox>
+            <mat-checkbox [(ngModel)]="csvSettings.skip_first" (change)="saveSettings()">Erste Zeile auslassen</mat-checkbox>
         </div>
         <div>
             <mat-form-field appearance="outline" style="max-width:100px">
                 <mat-label>Seperator</mat-label>
-                <input matInput placeholder="seperator" [(ngModel)]="csv.seperator" (change)="csv.save()">
+                <input matInput placeholder="seperator" [(ngModel)]="csvSettings.seperator" (change)="saveSettings()">
             </mat-form-field>
         </div>
         <hr />

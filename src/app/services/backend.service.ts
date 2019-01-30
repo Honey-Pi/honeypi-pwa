@@ -12,6 +12,25 @@ export class BackendService {
 
     private tsCountFields = 8;
 
+    private seperators: string[] = [',', '|', '/', ';', '^', '~'];
+
+    @LocalStorage() public importSettings = {
+        csv: {
+            seperator: ',',
+            skip_first: true
+        },
+        ts: {
+            channel_id: 651397,
+            public: true,
+            api_key: 'QPAXQ8XI1Q0P6T11',
+            start: null,
+            end: null,
+            results: 8000,
+            timescale: 15,
+            results_min: 10,
+            results_max: 8000
+        }
+    };
     @LocalStorage() public importSrc = 0;
     @LocalStorage() public tsData: any = null;
     @LocalStorage() public csvData: any = null;
@@ -45,13 +64,16 @@ export class BackendService {
         return ((this.importSrc === 0 && this.tsData) || (this.importSrc === 1 && this.csvData));
     }
 
-  public readTsChannel(channel_id: number,
-                       format: string = 'json',
-                       api_key: string,
-                       results: number,
-                       start: Date,
-                       end: Date,
-                       timescale: number): Observable<Object> {
+  public readTsChannel(): Observable<Object> {
+
+    const channel_id = this.importSettings.ts.channel_id;
+    const format = 'json';
+    const api_key = (!this.importSettings.ts.public) ? this.importSettings.ts.api_key : null;
+    const results = this.importSettings.ts.results;
+    const start = this.importSettings.ts.start;
+    const end = this.importSettings.ts.end;
+    const timescale = this.importSettings.ts.timescale;
+
     let append = '?';
     if (api_key) {
       append += 'api_key=' + api_key;

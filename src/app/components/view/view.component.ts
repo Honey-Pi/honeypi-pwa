@@ -208,10 +208,19 @@ export class ViewComponent implements OnInit {
     updateTsData(): void {
         this.barButtonOptions.active = true;
         this.barButtonOptions.text = 'Update...';
-        setTimeout(() => {
-            this.barButtonOptions.active = false;
-            this.barButtonOptions.text = 'Update';
-        }, 3500);
+
+        this.backendService.readTsChannel()
+            .subscribe( (val) => {
+                    this.backendService.tsData = val;
+                },
+                response => {
+                    this.backendService.tsData =  response;
+                },
+                () => {
+                    console.log('The readTsChannel observable is now completed.');
+                    this.barButtonOptions.active = false;
+                    this.barButtonOptions.text = 'Update';
+                });
     }
 
 }

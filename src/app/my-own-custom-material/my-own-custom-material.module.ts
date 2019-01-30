@@ -10,14 +10,14 @@ import {
     MatNativeDateModule,
     MatProgressSpinnerModule,
     MatRadioModule,
-    MatSelectModule,
+    MatSelectModule, MatSliderModule,
     MatSlideToggleModule
 } from '@angular/material';
 import {NgModule} from '@angular/core';
 
 @NgModule({
-  imports: [MatSlideToggleModule, MatIconModule, MatChipsModule, MatCardModule, MatProgressSpinnerModule, MatButtonModule, MatCheckboxModule, MatInputModule, MatBadgeModule, MatRadioModule, MatSelectModule, MatDatepickerModule, MatNativeDateModule],
-  exports: [MatSlideToggleModule, MatIconModule, MatChipsModule, MatCardModule, MatProgressSpinnerModule, MatButtonModule, MatCheckboxModule, MatInputModule, MatBadgeModule, MatRadioModule, MatSelectModule, MatDatepickerModule],
+  imports: [MatSliderModule, MatSlideToggleModule, MatIconModule, MatChipsModule, MatCardModule, MatProgressSpinnerModule, MatButtonModule, MatCheckboxModule, MatInputModule, MatBadgeModule, MatRadioModule, MatSelectModule, MatDatepickerModule, MatNativeDateModule],
+  exports: [MatSliderModule, MatSlideToggleModule, MatIconModule, MatChipsModule, MatCardModule, MatProgressSpinnerModule, MatButtonModule, MatCheckboxModule, MatInputModule, MatBadgeModule, MatRadioModule, MatSelectModule, MatDatepickerModule],
   providers: [MatDatepickerModule]
 })
 export class MyOwnCustomMaterialModule { }

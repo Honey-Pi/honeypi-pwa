@@ -10,20 +10,6 @@ import {MatProgressButtonOptions} from 'mat-progress-buttons';
 })
 export class HomeComponent implements OnInit {
 
-    @LocalStorage() public ts: any = {
-        channel_id: 651397,
-        api_key: 'QPAXQ8XI1Q0P6T11',
-        start: null,
-        end: null,
-        results: null,
-        timescale: 15
-    };
-
-    @LocalStorage() public csv: any = {
-        seperator: ',',
-        skip_first: true
-    };
-
     /*
       Progress Button
     */
@@ -38,10 +24,37 @@ export class HomeComponent implements OnInit {
         value: 0,
         disabled: false
     };
+    /*
+        Results Slider
+     */
+    formatLabel(value: number | null) {
+        if (!value) {
+            return 0;
+        }
+
+        if (value >= 1000) {
+            return Math.round(value / 10) + '0';
+        }
+
+        return value;
+    }
 
     constructor(public backendService: BackendService) { }
 
     ngOnInit() {
+    }
+
+    public get tsSettings() {
+        return this.backendService.importSettings.ts;
+    }
+
+    public saveSettings(): void {
+        // save to localStorage
+        this.backendService.importSettings = this.backendService.importSettings;
+    }
+
+    public get csvSettings() {
+        return this.backendService.importSettings.csv;
     }
 
     setTime(days: number, hours: number = 0) {
@@ -49,22 +62,16 @@ export class HomeComponent implements OnInit {
         d.setDate(d.getDate() - days);
         d.setHours(d.getHours() - hours);
 
-        this.ts.end = null;
-        this.ts.start = d;
-        this.ts.save();
+        this.tsSettings.end = null;
+        this.tsSettings.start = d;
+        this.saveSettings();
     }
 
     readTs() {
         this.barButtonOptions.active = true;
         this.barButtonOptions.text = 'Lädt ThingSpeak...';
 
-        this.backendService.readTsChannel(this.ts.channel_id,
-            'json',
-            this.ts.api_key,
-            this.ts.results,
-            this.ts.start,
-            this.ts.end,
-            this.ts.timescale)
+        this.backendService.readTsChannel()
             .subscribe( (val) => {
                         this.backendService.tsData = val;
                     },
@@ -103,12 +110,12 @@ export class HomeComponent implements OnInit {
   public csvJSON(csv: string) {
     const lines = csv.replace('\r', '').split('\n');
     const result = [];
-    const headers = lines[0].split(this.csv.seperator);
+    const headers = lines[0].split(this.csvSettings.seperator);
 
     for (let i = 1; i < lines.length; i++) {
 
       const obj = {};
-      const currentline = lines[i].replace('\r', '').split(this.csv.seperator);
+      const currentline = lines[i].replace('\r', '').split(this.csvSettings.seperator);
 
       for (let j = 0; j < headers.length; j++) {
         obj[headers[j]] = currentline[j];
