@@ -9,10 +9,9 @@ import {LocalStorage} from 'ngx-store';
 export class BackendService {
 
     private tsApiUrl = 'https://api.thingspeak.com';
-
     public tsCountFields = 8;
-
     public seperators: string[] = [',', '|', '/', ';', '^', '~'];
+    public unitList = ['°C', 'K', '°F', 'mbar', 'kg', 'AQI', 'mm', '%', 'V'];
 
     @LocalStorage() public importSettings = {
         csv: {
@@ -38,19 +37,17 @@ export class BackendService {
     @LocalStorage() public tsData: any = null;
     @LocalStorage() public csvData: any = null;
     @LocalStorage() sensorSettings = {
-        colors: BackendService.initRandomColors(this.tsCountFields),
-        visibility: BackendService.initVisibleFields(this.tsCountFields),
-        units: []
-    };
-
-    public unitList = ['°C', 'K', '°F', 'mbar', 'kg', 'AQI', 'mm', '%', 'V'];
+                                        colors: BackendService.initRandomColors(this.tsCountFields),
+                                        visibility: BackendService.initVisibleFields(this.tsCountFields),
+                                        units: []
+                                    };
 
     static initRandomColors(count = 8) {
-    const colors: string[] = [];
-    for (let i = 0; i < count; i++) {
-      colors.push('#' + (Math.random() * 0xFFFFFF << 0).toString(16));
-    }
-    return colors;
+        const colors: string[] = [];
+        for (let i = 0; i < count; i++) {
+          colors.push('#' + (Math.random() * 0xFFFFFF << 0).toString(16));
+        }
+        return colors;
     }
 
     static initVisibleFields(count = 8) {
@@ -63,46 +60,83 @@ export class BackendService {
 
     constructor(private http: HttpClient) { }
 
+    public csvJSON(csv: string) {
+        const lines = csv.replace('\r', '').split('\n');
+        const result = [];
+        const headers = lines[0].split(this.importSettings.csv.seperator);
+        const firstIndex = (this.importSettings.csv.noHeaders) ? 0 : 1;
+        for (let i = firstIndex; i < lines.length; i++) {
+
+            const obj = {};
+            const currentLine = lines[i].replace('\r', '').split(this.importSettings.csv.seperator);
+
+            for (let j = 0; j < headers.length; j++) {
+                if (this.importSettings.csv.noHeaders) {
+                    obj[j] = currentLine[j];
+                } else {
+                    obj[headers[j]] = currentLine[j];
+                }
+            }
+            result.push(obj);
+        }
+
+        return result; // JavaScript object
+    }
+
     get isDataLoaded(): boolean {
         return ((this.importSrc === 0 && this.tsData) || (this.importSrc === 1 && this.csvData));
     }
 
-  public readTsChannel(): Observable<Object> {
+    public readTsChannel(): Observable<Object> {
 
-    const channel_id = this.importSettings.ts.channel_id;
-    const format = 'json';
-    const api_key = (!this.importSettings.ts.public) ? this.importSettings.ts.api_key : null;
-    const results = this.importSettings.ts.results;
-    const start = this.importSettings.ts.start;
-    const end = this.importSettings.ts.end;
-    const timescale = this.importSettings.ts.timescale;
+        const channel_id = this.importSettings.ts.channel_id;
+        const format = 'json';
+        const api_key = (!this.importSettings.ts.public) ? this.importSettings.ts.api_key : null;
+        const results = this.importSettings.ts.results;
+        const start = this.importSettings.ts.start;
+        const end = this.importSettings.ts.end;
+        const timescale = this.importSettings.ts.timescale;
 
-    let append = '?';
-    if (api_key) {
-      append += 'api_key=' + api_key;
-    }
-    if (start) {
-      append += '&start=' + start;
-    }
-    if (end) {
-      append += '&end=' + end;
-    }
-    append += '&timezone=Europe/Berlin';
-    if (results) {
-      append += '&results=' + results;
-    }
-    if (timescale) {
-      append += '&timescale=' + timescale;
+        let append = '?';
+        if (api_key) {
+          append += 'api_key=' + api_key;
+        }
+        if (start) {
+          append += '&start=' + start;
+        }
+        if (end) {
+          append += '&end=' + end;
+        }
+        append += '&timezone=Europe/Berlin';
+        if (results) {
+          append += '&results=' + results;
+        }
+        if (timescale) {
+          append += '&timescale=' + timescale;
+        }
+
+        return this.http.get(this.tsApiUrl + '/channels/' + channel_id + '/feeds.' + format + append);
     }
 
-    return this.http.get(this.tsApiUrl + '/channels/' + channel_id + '/feeds.' + format + append);
-  }
+    getTsFieldTitle(fieldNumber: number) {
+        return this.tsData.channel['field' + (fieldNumber + 1)];
+    }
 
-  getTsFieldTitle(fieldNumber: number) {
-    return this.tsData.channel['field' + (fieldNumber + 1)];
-  }
+    getTsFieldTitles(filter = false) {
+        const row = [];
+        for (let i = 0; i < this.tsCountFields; i++) {
+          if (filter) {
+            if (this.sensorSettings.visibility[i] && this.tsDataLastLine.fields[i]) {
+                row.push(this.getTsFieldTitle(i));
+            }
+          } else {
+            row.push(this.getTsFieldTitle(i));
+          }
+        }
+        return row;
+    }
 
-  get tsDataLastLine() {
+    get tsDataLastLine() {
         const lastFeed = this.tsData.feeds.slice(-1)[0];
         const measurements = [];
         for (const field in lastFeed) {
@@ -112,20 +146,6 @@ export class BackendService {
         }
         return {time: new Date(lastFeed.created_at), fields: measurements};
     }
-
-  getTsFieldTitles(filter = false) {
-    const row = [];
-    for (let i = 0; i < this.tsCountFields; i++) {
-      if (filter) {
-        if (this.sensorSettings.visibility[i] && this.tsDataLastLine.fields[i]) {
-            row.push(this.getTsFieldTitle(i));
-        }
-      } else {
-        row.push(this.getTsFieldTitle(i));
-      }
-    }
-    return row;
-  }
 
     getTsFieldForMeasurementView(): {title, visibility, data, unit}[] {
         const row = [];
@@ -142,7 +162,7 @@ export class BackendService {
         return row;
     }
 
-    public readCsvFromUrl() {
+    public readCsvUrl() {
         return this.http.get(this.importSettings.csv.urlPath, { responseType: 'text' });
     }
 

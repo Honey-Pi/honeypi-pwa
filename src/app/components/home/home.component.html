@@ -115,7 +115,7 @@
             <input type="file"
                id="settingsFile" name="settingsFile" class="form-control-file"
                accept="text/csv,.csv"
-               (change)="readCsv($event)" #fileInput />
+               (change)="readCsvFromFile($event)" #fileInput />
         </div>
 
         <mat-form-field appearance="outline" style="min-width:250px" *ngIf="!csvSettings.useFile">
@@ -126,7 +126,7 @@
 
         <mat-card-actions>
             <button mat-raised-button color="primary" (click)="fileInput.click()" *ngIf="csvSettings.useFile">›› CSV-Datei auswählen</button>
-            <button mat-raised-button color="primary" (click)="readCsvFromUrlAndParse()" *ngIf="!csvSettings.useFile">›› CSV abrufen</button>
+            <button mat-raised-button color="primary" (click)="readCsvFromUrl()" *ngIf="!csvSettings.useFile">›› CSV abrufen</button>
         </mat-card-actions>
       <!--
       <pre *ngIf="backendService.csvData" class="pre-scrollable">{{csvData|json}}</pre>

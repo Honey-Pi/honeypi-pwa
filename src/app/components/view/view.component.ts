@@ -14,18 +14,12 @@ export class ViewComponent implements OnInit {
 
     constructor(private backendService: BackendService, private router: Router) { }
 
-    get getData() {
-        if (this.backendService.importSrc === 0) {
-            return this.getDataTs();
-        } else {
-            return this.getDataCsv();
-        }
-    }
-
     @LocalStorage() public showChart = true;
     @LocalStorage() public showDygraph = false;
 
-    // lineChart
+    /*
+    Chart.js lineChart
+     */
     public lineChartData: Array<any> = (this.backendService.importSrc === 0) ? this.getTsLineChartData() : this.getCsvLineChartData();
     public lineChartLabels: Array<any> = (this.backendService.importSrc === 0) ? this.getDataTsTimeLabels() : this.getDataCsvTimeLabels();
     public lineChartOptions: any = {
@@ -66,9 +60,9 @@ export class ViewComponent implements OnInit {
     Dygraph
     */
     // data property needs to be defined as attribute in the component and in native array format http://dygraphs.com/data.html#array
-    public data = (this.backendService.importSrc === 0) ? this.getTsDataForDygraph() : this.getCsvDataForDygraph();
+    public dygraphData = (this.backendService.importSrc === 0) ? this.getTsDataForDygraph() : this.getCsvDataForDygraph();
     // options object needs to be defined as attribute in the component and consist of valid options http://dygraphs.com/options.html
-    public options = {
+    public dygraphOptions = {
         width: 'auto',
         pointSize: 4,
         connectSeparatedPoints: true,
@@ -131,12 +125,35 @@ export class ViewComponent implements OnInit {
         }
     }
 
+    getLineChartColors() {
+        const row = [];
+        for (let i = 0; i < this.backendService.tsCountFields; i++) {
+            row.push({
+                backgroundColor: ViewComponent.hexToRGB(this.backendService.sensorSettings.colors[i], 0.2),
+                borderColor: ViewComponent.hexToRGB(this.backendService.sensorSettings.colors[i], 1),
+                pointBackgroundColor: ViewComponent.hexToRGB(this.backendService.sensorSettings.colors[i], 1),
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: ViewComponent.hexToRGB(this.backendService.sensorSettings.colors[i], 0.8)
+            });
+        }
+        return row;
+    }
+
     getDataTs() {
         return this.backendService.tsData.feeds;
     }
 
     getDataCsv() {
         return this.backendService.csvData;
+    }
+
+    get getData() {
+        if (this.backendService.importSrc === 0) {
+            return this.getDataTs();
+        } else {
+            return this.getDataCsv();
+        }
     }
 
     getTsFieldTitlesForDygraph() {
@@ -185,21 +202,6 @@ export class ViewComponent implements OnInit {
         return rows;
     }
 
-    getLineChartColors() {
-        const row = [];
-        for (let i = 0; i < this.backendService.tsCountFields; i++) {
-          row.push({
-            backgroundColor: ViewComponent.hexToRGB(this.backendService.sensorSettings.colors[i], 0.2),
-            borderColor: ViewComponent.hexToRGB(this.backendService.sensorSettings.colors[i], 1),
-            pointBackgroundColor: ViewComponent.hexToRGB(this.backendService.sensorSettings.colors[i], 1),
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: ViewComponent.hexToRGB(this.backendService.sensorSettings.colors[i], 0.8)
-          });
-        }
-        return row;
-    }
-
     getDataTsTimeLabels() {
         const labels: Array<Date> = [];
         for (const feed of this.getDataTs()) {
@@ -216,7 +218,6 @@ export class ViewComponent implements OnInit {
                 labels.push(newTimeLabel);
             }
         }
-        console.log(labels);
         return labels;
     }
 
@@ -263,13 +264,21 @@ export class ViewComponent implements OnInit {
         return row;
     }
 
-    // events
+    // chart.js events
     public chartClicked(e: any): void {
         console.log(e);
     }
 
     public chartHovered(e: any): void {
         console.log(e);
+    }
+
+    /*
+    Update
+     */
+    get showUpdateButton(): boolean {
+        return (this.backendService.importSrc === 0) ||
+            (this.backendService.importSrc === 1 && !this.backendService.importSettings.csv.useFile);
     }
 
     updateTsData(): void {
@@ -288,6 +297,27 @@ export class ViewComponent implements OnInit {
                     this.barButtonOptions.active = false;
                     this.barButtonOptions.text = 'Update';
                 });
+    }
+
+    updateCsvData() {
+        this.barButtonOptions.active = true;
+        this.barButtonOptions.text = 'Update...';
+
+        this.backendService.readCsvUrl().subscribe( (val) => {
+                // convert text to json here
+                this.backendService.csvData = this.backendService.csvJSON(val);
+                console.log(this.backendService.csvData);
+            },
+            response => {
+                console.log(response);
+                alert('Fehler beim Abruf der CSV-URL.');
+            },
+            () => {
+                console.log('The readCsvUrl observable is now completed.');
+
+                this.barButtonOptions.active = false;
+                this.barButtonOptions.text = 'Update';
+            });
     }
 
 }

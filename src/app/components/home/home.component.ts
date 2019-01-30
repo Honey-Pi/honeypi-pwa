@@ -86,7 +86,7 @@ export class HomeComponent implements OnInit {
                     });
     }
 
-  readCsv(event) {
+  readCsvFromFile(event) {
     const file: File = event.target.files[0];
     if (file) {
       const reader: FileReader = new FileReader();
@@ -97,7 +97,7 @@ export class HomeComponent implements OnInit {
           if (window.confirm('Soll die CSV-Datei jetzt importiert werden?')) {
             console.log('CSV: ', csv.substring(0, 100) + '...');
             // convert text to json here
-            this.backendService.csvData = this.csvJSON(csv);
+            this.backendService.csvData = this.backendService.csvJSON(csv);
             console.log(this.backendService.csvData);
           }
         }
@@ -108,35 +108,10 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  public csvJSON(csv: string) {
-    const lines = csv.replace('\r', '').split('\n');
-    const result = [];
-    const headers = lines[0].split(this.csvSettings.seperator);
-    const firstIndex = (this.csvSettings.noHeaders) ? 0 : 1;
-    for (let i = firstIndex; i < lines.length; i++) {
-
-      const obj = {};
-      const currentLine = lines[i].replace('\r', '').split(this.csvSettings.seperator);
-
-      for (let j = 0; j < headers.length; j++) {
-          if (this.csvSettings.noHeaders) {
-              obj[j] = currentLine[j];
-          } else {
-              obj[headers[j]] = currentLine[j];
-          }
-      }
-
-      result.push(obj);
-
-    }
-
-    return result; // JavaScript object
-  }
-
-  public readCsvFromUrlAndParse() {
-    this.backendService.readCsvFromUrl().subscribe( (val) => {
+  public readCsvFromUrl() {
+    this.backendService.readCsvUrl().subscribe( (val) => {
             // convert text to json here
-            this.backendService.csvData = this.csvJSON(val);
+            this.backendService.csvData = this.backendService.csvJSON(val);
             console.log(this.backendService.csvData);
         },
         response => {

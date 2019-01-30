@@ -29,7 +29,10 @@
   </ng-container>
 </div>
 <div class="clearfix">
-    <mat-bar-button [options]="barButtonOptions" (click)="updateTsData()" class="float-right"></mat-bar-button>
+    <ng-container *ngIf="showUpdateButton">
+        <mat-bar-button *ngIf="this.backendService.importSrc === 0" [options]="barButtonOptions" (click)="updateTsData()" class="float-right"></mat-bar-button>
+        <mat-bar-button *ngIf="this.backendService.importSrc === 1" [options]="barButtonOptions" (click)="updateCsvData()" class="float-right"></mat-bar-button>
+    </ng-container>
     <strong class="text-truncate">Letzte Messung: {{backendService.tsDataLastLine.time.toLocaleString('de-DE')}}</strong>
 </div>
 <!-- Chart.js -->
@@ -66,9 +69,9 @@
             <strong>Dygraph</strong>
         </mat-slide-toggle>
         <ngx-dygraphs *ngIf="showDygraph"
-                [data]="data"
-                [options]="options"
-        style="margin-left:-20px">
+                [data]="dygraphData"
+                [options]="dygraphOptions"
+                style="margin-left:-20px">
         </ngx-dygraphs>
     </mat-card-content>
 </mat-card>
