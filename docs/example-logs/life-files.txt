@@ -1,0 +1,3 @@
+# Live CSV-Files
+https://live.beelogger.de/beelogger/beelogger.csv
+https://live.beelogger.de/beelogger/month.csv
