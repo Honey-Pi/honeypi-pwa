@@ -17,7 +17,7 @@ export class BackendService {
     @LocalStorage() public importSettings = {
         csv: {
             seperator: ',',
-            skip_first: true,
+            noHeaders: true,
             useFile: false,
             urlPath: 'https://live.beelogger.de/beelogger/beelogger.csv'
         },

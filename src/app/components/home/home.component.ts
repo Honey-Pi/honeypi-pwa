@@ -76,7 +76,8 @@ export class HomeComponent implements OnInit {
                         this.backendService.tsData = val;
                     },
                     response => {
-                        this.backendService.tsData =  response;
+                        console.log(response);
+                        alert('Fehler beim Abruf der ThingSpeak Daten');
                     },
                     () => {
                         console.log('The readTsChannel observable is now completed.');
@@ -111,14 +112,18 @@ export class HomeComponent implements OnInit {
     const lines = csv.replace('\r', '').split('\n');
     const result = [];
     const headers = lines[0].split(this.csvSettings.seperator);
-
-    for (let i = 1; i < lines.length; i++) {
+    const firstIndex = (this.csvSettings.noHeaders) ? 0 : 1;
+    for (let i = firstIndex; i < lines.length; i++) {
 
       const obj = {};
-      const currentline = lines[i].replace('\r', '').split(this.csvSettings.seperator);
+      const currentLine = lines[i].replace('\r', '').split(this.csvSettings.seperator);
 
       for (let j = 0; j < headers.length; j++) {
-        obj[headers[j]] = currentline[j];
+          if (this.csvSettings.noHeaders) {
+              obj[j] = currentLine[j];
+          } else {
+              obj[headers[j]] = currentLine[j];
+          }
       }
 
       result.push(obj);
@@ -129,11 +134,18 @@ export class HomeComponent implements OnInit {
   }
 
   public readCsvFromUrlAndParse() {
-    this.backendService.readCsvFromUrl().subscribe(data => {
-        // convert text to json here
-        this.backendService.csvData = this.csvJSON(data);
-        console.log(this.backendService.csvData);
-    });
+    this.backendService.readCsvFromUrl().subscribe( (val) => {
+            // convert text to json here
+            this.backendService.csvData = this.csvJSON(val);
+            console.log(this.backendService.csvData);
+        },
+        response => {
+            console.log(response);
+            alert('Fehler beim Abruf der CSV-URL.');
+        },
+        () => {
+            console.log('The readCsvFromUrl observable is now completed.');
+        });
   }
 /*
   csv2Array(fileInput: any) {

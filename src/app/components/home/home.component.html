@@ -93,7 +93,7 @@
     </mat-radio-button>
     <mat-card-content *ngIf="backendService.importSrc==1">
         <div>
-            <mat-checkbox [(ngModel)]="csvSettings.skip_first" (change)="saveSettings()">Kein Tabellenkopf vorhanden</mat-checkbox>
+            <mat-checkbox [(ngModel)]="csvSettings.noHeaders" (change)="saveSettings()">Kein Tabellenkopf vorhanden</mat-checkbox>
         </div>
         <div>
             <mat-form-field appearance="outline" style="max-width:100px">
