@@ -10,7 +10,7 @@ export class BackendService {
 
     private tsApiUrl = 'https://api.thingspeak.com';
 
-    private tsCountFields = 8;
+    public tsCountFields = 8;
 
     public seperators: string[] = [',', '|', '/', ';', '^', '~'];
 
@@ -19,7 +19,8 @@ export class BackendService {
             seperator: ',',
             noHeaders: true,
             useFile: false,
-            urlPath: 'https://live.beelogger.de/beelogger/beelogger.csv'
+            urlPath: 'https://live.beelogger.de/beelogger/beelogger.csv',
+            dateIndex: 0
         },
         ts: {
             channel_id: 651397,

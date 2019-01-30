@@ -3,6 +3,7 @@ import {BackendService} from '../../services/backend.service';
 import {Router} from '@angular/router';
 import {MatProgressButtonOptions} from 'mat-progress-buttons';
 import {LocalStorage} from 'ngx-store';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-view',
@@ -25,8 +26,8 @@ export class ViewComponent implements OnInit {
     @LocalStorage() public showDygraph = false;
 
     // lineChart
-    public lineChartData: Array<any> = this.getTsLineChartData();
-    public lineChartLabels: Array<any> = this.getDataTsTimeLabels();
+    public lineChartData: Array<any> = (this.backendService.importSrc === 0) ? this.getTsLineChartData() : this.getCsvLineChartData();
+    public lineChartLabels: Array<any> = (this.backendService.importSrc === 0) ? this.getDataTsTimeLabels() : this.getDataCsvTimeLabels();
     public lineChartOptions: any = {
       responsive: true,
       plugins: {
@@ -65,13 +66,13 @@ export class ViewComponent implements OnInit {
     Dygraph
     */
     // data property needs to be defined as attribute in the component and in native array format http://dygraphs.com/data.html#array
-    public data = this.getTsDataForDygraph();
+    public data = (this.backendService.importSrc === 0) ? this.getTsDataForDygraph() : this.getCsvDataForDygraph();
     // options object needs to be defined as attribute in the component and consist of valid options http://dygraphs.com/options.html
     public options = {
         width: 'auto',
         pointSize: 4,
         connectSeparatedPoints: true,
-        labels: this.getTsFieldTitlesForDygraph(),
+        labels: (this.backendService.importSrc === 0) ? this.getTsFieldTitlesForDygraph() : this.getCsvFieldTitlesForDygraph(),
         showRangeSelector: true,
         rangeSelectorHeight: 20,
         rangeSelectorPlotStrokeColor: 'black',
@@ -119,10 +120,23 @@ export class ViewComponent implements OnInit {
         }
     }
 
+    static convertStringToDate(dateStr: string): Date {
+        const momentDate: moment.Moment = moment(dateStr);
+        return momentDate.toDate();
+    }
+
     ngOnInit() {
         if (!this.backendService.isDataLoaded) {
             this.router.navigate(['/home']);
         }
+    }
+
+    getDataTs() {
+        return this.backendService.tsData.feeds;
+    }
+
+    getDataCsv() {
+        return this.backendService.csvData;
     }
 
     getTsFieldTitlesForDygraph() {
@@ -131,10 +145,15 @@ export class ViewComponent implements OnInit {
         return labels;
     }
 
+    getCsvFieldTitlesForDygraph() {
+        // needs to match with colums in json
+        return ['Uhrzeit', 'A', 'B', 'C', 'D', 'E', 'F', 'G'];
+    }
+
     getTsDataForDygraph() {
           // [[new Date('2008/05/07'), 75, 25],[new Date('2008/05/08'), 70, 30],[new Date('2008/05/09'), 80, 23]];
         const rows = [];
-        for (const feed of this.backendService.tsData.feeds) {
+        for (const feed of this.getDataTs()) {
           const row: any[] = [<Date>new Date(feed.created_at)];
           for (const field in feed) {
             if (field.indexOf('field') !== -1) {
@@ -146,9 +165,29 @@ export class ViewComponent implements OnInit {
         return rows;
     }
 
+    getCsvDataForDygraph() {
+        // [[new Date('2008/05/07'), 75, 25],[new Date('2008/05/08'), 70, 30],[new Date('2008/05/09'), 80, 23]];
+        const rows = [];
+        for (const line of this.getDataCsv()) {
+            const row: any[] = [ViewComponent.convertStringToDate(line[this.backendService.importSettings.csv.dateIndex || 0])];
+            for (let i = 0; i < this.backendService.tsCountFields; i++) {
+                // skip Date index
+                if (i !== this.backendService.importSettings.csv.dateIndex) {
+                    if (line[i]) {
+                        row.push(<number>parseFloat(line[i]));
+                    }
+                }
+            }
+            if (row.length > 1) {
+             rows.push(row);
+            }
+        }
+        return rows;
+    }
+
     getLineChartColors() {
         const row = [];
-        for (let i = 0; i < this.backendService.getTsFieldTitles().length; i++) {
+        for (let i = 0; i < this.backendService.tsCountFields; i++) {
           row.push({
             backgroundColor: ViewComponent.hexToRGB(this.backendService.sensorSettings.colors[i], 0.2),
             borderColor: ViewComponent.hexToRGB(this.backendService.sensorSettings.colors[i], 1),
@@ -161,39 +200,67 @@ export class ViewComponent implements OnInit {
         return row;
     }
 
-    getDataTs() {
-        return this.backendService.tsData.feeds;
-    }
-
     getDataTsTimeLabels() {
         const labels: Array<Date> = [];
         for (const feed of this.getDataTs()) {
-          labels.push(feed.created_at);
+          labels.push(ViewComponent.convertStringToDate(feed.created_at));
         }
+        return labels;
+    }
+
+    getDataCsvTimeLabels() {
+        const labels: Array<Date> = [];
+        for (const feed of this.getDataCsv()) {
+            if (feed && feed[this.backendService.importSettings.csv.dateIndex || 0]) {
+                const newTimeLabel: Date = ViewComponent.convertStringToDate(feed[this.backendService.importSettings.csv.dateIndex || 0]);
+                labels.push(newTimeLabel);
+            }
+        }
+        console.log(labels);
         return labels;
     }
 
     getDataTsPerField(fieldNumber: number) {
-        const labels: Array<Date> = [];
+        const datas: Array<number> = [];
         for (const feed of this.getDataTs()) {
-          labels.push(feed['field' + (fieldNumber + 1)]);
+          datas.push(feed['field' + (fieldNumber + 1)]);
         }
-        return labels;
+        return datas;
+    }
+
+    getDataCsvPerField(index: number) {
+        const datas: Array<number> = [];
+        for (const feed of this.getDataCsv()) {
+            datas.push(feed[index]);
+        }
+        return datas;
     }
 
     getTsLineChartData() {
         const row = [];
-        for (let i = 0; i < this.backendService.getTsFieldTitles().length; i++) {
-          row.push({    data: this.getDataTsPerField(i),
+        for (let i = 0; i < this.backendService.tsCountFields; i++) {
+          row.push({
+                        data: this.getDataTsPerField(i),
                         label: this.backendService.getTsFieldTitle(i),
                         hidden: !this.backendService.sensorSettings.visibility[i]
-          });
+                    });
         }
         return row;
     }
 
-    getDataCsv() {
-        return this.backendService.csvData;
+    getCsvLineChartData() {
+        const row = [];
+        for (let i = 0; i < this.backendService.tsCountFields; i++) {
+            // skip first line with Date
+            if (i !== this.backendService.importSettings.csv.dateIndex) {
+                row.push({
+                    data: this.getDataCsvPerField(i),
+                    label: i + 1,
+                    hidden: !this.backendService.sensorSettings.visibility[i]
+                });
+            }
+        }
+        return row;
     }
 
     // events
