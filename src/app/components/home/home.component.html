@@ -93,24 +93,40 @@
     </mat-radio-button>
     <mat-card-content *ngIf="backendService.importSrc==1">
         <div>
-            <mat-checkbox [(ngModel)]="csvSettings.skip_first" (change)="saveSettings()">Erste Zeile auslassen</mat-checkbox>
+            <mat-checkbox [(ngModel)]="csvSettings.skip_first" (change)="saveSettings()">Kein Tabellenkopf vorhanden</mat-checkbox>
         </div>
         <div>
             <mat-form-field appearance="outline" style="max-width:100px">
                 <mat-label>Seperator</mat-label>
-                <input matInput placeholder="seperator" [(ngModel)]="csvSettings.seperator" (change)="saveSettings()">
+                <mat-select [(value)]="csvSettings.seperator" (selectionChange)="saveSettings()">
+                    <mat-option *ngFor="let seperator of backendService.seperators" [value]="seperator">{{seperator}}</mat-option>
+                </mat-select>
             </mat-form-field>
         </div>
-        <hr />
-        <div class="form-group">
+        <p>
+            <mat-slide-toggle
+                    color="accent" class="noselect"
+                    [(ngModel)]="csvSettings.useFile" (ngModelChange)="saveSettings()">
+                Dateiupload
+            </mat-slide-toggle>
+        </p>
+        <div class="form-group" *ngIf="csvSettings.useFile">
             <label for="settingsFile">Datei von Computer importieren:</label>
             <input type="file"
                id="settingsFile" name="settingsFile" class="form-control-file"
                accept="text/csv,.csv"
                (change)="readCsv($event)" #fileInput />
         </div>
+
+        <mat-form-field appearance="outline" style="min-width:250px" *ngIf="!csvSettings.useFile">
+            <mat-label>URL zur CSV-Datei</mat-label>
+            <input matInput placeholder="http://"
+                   [(ngModel)]="csvSettings.urlPath" (ngModelChange)="saveSettings()">
+        </mat-form-field>
+
         <mat-card-actions>
-            <button mat-raised-button color="primary" (click)="fileInput.click()">›› CSV-Datei auswählen</button>
+            <button mat-raised-button color="primary" (click)="fileInput.click()" *ngIf="csvSettings.useFile">›› CSV-Datei auswählen</button>
+            <button mat-raised-button color="primary" (click)="readCsvFromUrlAndParse()" *ngIf="!csvSettings.useFile">›› CSV abrufen</button>
         </mat-card-actions>
       <!--
       <pre *ngIf="backendService.csvData" class="pre-scrollable">{{csvData|json}}</pre>

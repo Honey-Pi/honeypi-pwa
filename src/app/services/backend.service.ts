@@ -12,12 +12,14 @@ export class BackendService {
 
     private tsCountFields = 8;
 
-    private seperators: string[] = [',', '|', '/', ';', '^', '~'];
+    public seperators: string[] = [',', '|', '/', ';', '^', '~'];
 
     @LocalStorage() public importSettings = {
         csv: {
             seperator: ',',
-            skip_first: true
+            skip_first: true,
+            useFile: false,
+            urlPath: 'https://live.beelogger.de/beelogger/beelogger.csv'
         },
         ts: {
             channel_id: 651397,
@@ -139,5 +141,8 @@ export class BackendService {
         return row;
     }
 
+    public readCsvFromUrl() {
+        return this.http.get(this.importSettings.csv.urlPath, { responseType: 'text' });
+    }
 
 }

@@ -127,6 +127,14 @@ export class HomeComponent implements OnInit {
 
     return result; // JavaScript object
   }
+
+  public readCsvFromUrlAndParse() {
+    this.backendService.readCsvFromUrl().subscribe(data => {
+        // convert text to json here
+        this.backendService.csvData = this.csvJSON(data);
+        console.log(this.backendService.csvData);
+    });
+  }
 /*
   csv2Array(fileInput: any) {
     //read file from input
