@@ -20,6 +20,13 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import '../../node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js';
 import {MatProgressButtonsModule} from 'mat-progress-buttons';
 import {AuthGuard} from './services/auth.guard';
+// FCM
+import {environment} from '../environments/environment';
+import {AngularFireMessagingModule} from '@angular/fire/messaging';
+import {AngularFireModule} from '@angular/fire';
+import {AngularFireAuthModule} from '@angular/fire/auth';
+import {MessagingService} from './services/messaging.service';
+import {AngularFireDatabaseModule} from '@angular/fire/database';
 
 
 const appRoutes: Routes = [
@@ -53,9 +60,13 @@ const appRoutes: Routes = [
     ChartsModule,
     NgxDygraphsModule,
     ColorPickerModule,
-    MatProgressButtonsModule.forRoot()
+    MatProgressButtonsModule.forRoot(),
+    AngularFireDatabaseModule,
+    AngularFireAuthModule,
+    AngularFireMessagingModule,
+    AngularFireModule.initializeApp(environment.firebase),
   ],
-  providers: [AuthGuard],
+  providers: [MessagingService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
