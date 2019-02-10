@@ -10,7 +10,6 @@ import {environment} from '../../environments/environment';
 @Injectable()
 export class MessagingService {
 
-    private token: string;
     currentMessage = new BehaviorSubject(null);
 
     constructor(
@@ -38,8 +37,6 @@ export class MessagingService {
             () => {
                 const data = {};
                 data[userId] = token;
-                this.token = token;
-                console.log('updateToken', token);
                 this.angularFireDB.object('fcmTokens/').update(data);
             });
     }
@@ -49,14 +46,14 @@ export class MessagingService {
      *
      * @param userId userId
      */
-    requestPermission(userId, channelId) {
+    requestPermission(channelId) {
+        const userId = 'user001';
         this.angularFireMessaging.requestToken.subscribe(
             (token) => {
                 console.log('requestPermission', token);
                 this.updateToken(userId, token);
-                this.token = token;
                 // subscribe client to topic
-                this.subscribeClient(channelId);
+                this.subscribeClient(token, channelId);
             },
             (err) => {
                 console.error('Unable to get permission to notify.', err);
@@ -84,8 +81,8 @@ export class MessagingService {
             }));
     }
 
-    subscribeClient(channel): void {
-        this.subscribeClientAppToTopic(this.token, channel).subscribe(res => {
+    subscribeClient(token, channel): void {
+        this.subscribeClientAppToTopic(token, channel).subscribe(res => {
             console.log('subscribeClient', res);
         }, error => {
             console.error('subscribeClient', error);

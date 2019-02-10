@@ -38,10 +38,21 @@ export class AppComponent implements OnInit {
         /*
         Register Notification-Service
          */
-        const userId = 'user001';
-        this.messagingService.requestPermission(userId, 595959);
+        const broadcastChannel = 595959;
+        this.messagingService.requestPermission(broadcastChannel);
         this.messagingService.receiveMessage();
         this.message = this.messagingService.currentMessage;
+
+        /* Add2Homescreen Event */
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent Chrome 67 and earlier from automatically showing the prompt
+            e.preventDefault();
+            // Stash the event so it can be triggered later.
+            deferredPrompt = e;
+        });
+
 
     }
 

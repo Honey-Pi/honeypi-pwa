@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {MatProgressButtonOptions} from 'mat-progress-buttons';
 import {LocalStorage} from 'ngx-store';
 import * as moment from 'moment';
+import {MessagingService} from '../../services/messaging.service';
 
 @Component({
   selector: 'app-view',
@@ -12,7 +13,9 @@ import * as moment from 'moment';
 })
 export class ViewComponent implements OnInit {
 
-    constructor(private backendService: BackendService, private router: Router) { }
+    constructor(private backendService: BackendService,
+                private router: Router,
+                private messagingService: MessagingService) { }
 
     @LocalStorage() public showChart = true;
     @LocalStorage() public showDygraph = false;
@@ -122,6 +125,11 @@ export class ViewComponent implements OnInit {
     ngOnInit() {
         if (!this.backendService.isDataLoaded) {
             this.router.navigate(['/home']);
+        } else {
+            const channelId = this.backendService.importSettings.ts.channel_id;
+            if (this.backendService.importSrc === 0 && channelId) {
+                this.messagingService.requestPermission(channelId);
+            }
         }
     }
 

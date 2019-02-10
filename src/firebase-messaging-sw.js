@@ -22,7 +22,7 @@ messaging.setBackgroundMessageHandler(function (payload) {
     var notificationTitle = payload.notification.title;
     var notificationOptions = {
         body: payload.notification.body,
-        icon: '/assets/honeypi-brand.svg'
+        icon: 'assets/honeypi-brand.svg'
     };
 
     return self.registration.showNotification(notificationTitle,
