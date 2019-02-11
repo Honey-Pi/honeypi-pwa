@@ -1,6 +1,6 @@
 # HoneyPi - Progressive Web App (PWA)
 
-Live: https://dashboard.honey-pi.de
+Live: https://dashboard.honeypi.de
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.1.
 
