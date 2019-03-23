@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {LocalStorage} from 'ngx-store';
 
 @Injectable({
@@ -8,11 +8,13 @@ import {LocalStorage} from 'ngx-store';
 })
 export class BackendService {
 
+    private bypassCorsUrl = 'https://www.honey-pi.de/backend/getcsv.php';
     private tsApiUrl = 'https://api.thingspeak.com';
     public tsCountFields = 8;
     public seperators: string[] = [',', '|', '/', ';', '^', '~'];
     public unitList = ['°C', 'K', '°F', 'mbar', 'kg', 'AQI', 'mm', '%', 'V'];
 
+    @LocalStorage() public selectedSetting = 0;
     @LocalStorage() public importSettings = {
         csv: {
             seperator: ',',
@@ -163,7 +165,14 @@ export class BackendService {
     }
 
     public readCsvUrl() {
-        return this.http.get(this.importSettings.csv.urlPath, { responseType: 'text' });
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type':  'application/x-www-form-urlencoded'
+            }),
+            responseType: 'text' as 'json'
+        };
+        const postBody = 'file=' + this.importSettings.csv.urlPath;
+        return this.http.post<string>(this.bypassCorsUrl, postBody, httpOptions);
     }
 
 }

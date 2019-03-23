@@ -1,12 +1,12 @@
 {
   "name": "honeypi-pwa",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": "Javan Rasokat",
   "license": "CC BY-NC-ND 4.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4201",
-    "build": "ng build",
+    "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

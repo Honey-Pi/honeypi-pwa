@@ -76,7 +76,7 @@ export class HomeComponent implements OnInit {
                         this.backendService.tsData = val;
                     },
                     response => {
-                        console.log(response);
+                        console.error(response);
                         alert('Fehler beim Abruf der ThingSpeak Daten');
                     },
                     () => {
@@ -115,7 +115,7 @@ export class HomeComponent implements OnInit {
             console.log(this.backendService.csvData);
         },
         response => {
-            console.log(response);
+            console.error(response);
             alert('Fehler beim Abruf der CSV-URL.');
         },
         () => {
