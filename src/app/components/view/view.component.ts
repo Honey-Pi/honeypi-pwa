@@ -13,7 +13,7 @@ import {MessagingService} from '../../services/messaging.service';
 })
 export class ViewComponent implements OnInit {
 
-    constructor(private backendService: BackendService,
+    constructor(public backendService: BackendService,
                 private router: Router,
                 private messagingService: MessagingService) { }
 
