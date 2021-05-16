@@ -17,12 +17,6 @@ export class MessagingService {
         private angularFireAuth: AngularFireAuth,
         private angularFireMessaging: AngularFireMessaging,
         private http: HttpClient) {
-        this.angularFireMessaging.messaging.subscribe(
-            (_messaging) => {
-                _messaging.onMessage = _messaging.onMessage.bind(_messaging);
-                _messaging.onTokenRefresh = _messaging.onTokenRefresh.bind(_messaging);
-            }
-        );
     }
 
     /**

@@ -18,6 +18,9 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/honeypi-pwa",
+            "allowedCommonJsDependencies": [
+              "ngx-store"
+            ],
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -35,7 +38,7 @@
 			      ],
             "scripts": [
               "./node_modules/dygraphs/dist/dygraph.min.js",
-              "./node_modules/chart.js/dist/Chart.bundle.js"
+              "./node_modules/chart.js/dist/chart.min.js"
             ]
           },
           "configurations": {
