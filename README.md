@@ -1,4 +1,4 @@
-# HoneyPi - Progressive Web App (PWA)
+# HoneyPi Dashboard - Progressive Web App (PWA) [![Build and deploy to GitHub pages](https://github.com/Honey-Pi/honeypi-pwa/actions/workflows/gh-pages.yml/badge.svg)](https://github.com/Honey-Pi/honeypi-pwa/actions/workflows/gh-pages.yml)
 
 Live: https://dashboard.honeypi.de
 
