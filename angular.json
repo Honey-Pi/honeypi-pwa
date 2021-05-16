@@ -19,7 +19,7 @@
           "options": {
             "outputPath": "dist/honeypi-pwa",
             "allowedCommonJsDependencies": [
-              "ngx-store"
+              "lodash"
             ],
             "index": "src/index.html",
             "main": "src/main.ts",
