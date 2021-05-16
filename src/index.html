@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="de">
 <head>
+	<script src="/assets/js/ngx-store.config.js"></script>
   <meta charset="utf-8">
   <title>Dashboard</title>
   <base href="/">
@@ -18,16 +19,6 @@
   <meta name="application-name" content="HoneyPi Dashboard">
   <meta name="msapplication-TileColor" content="#f3ab0d">
   <meta name="theme-color" content="#f3ab0d">
-  <script>
-    var NGXSTORE_CONFIG = {
-      prefix: 'hpi_',      // default: 'ngx_'
-      clearType: 'prefix', // default: 'prefix'
-      mutateObjects: true, // default: true
-      debugMode: false,    // you can enable debug logs if you ever meet any bug to localize its source
-      cookiesScope: '',    // what you pass here will actually prepend base domain
-      cookiesCheckInterval: 0, // number in ms describing how often cookies should be checked for changes
-    };
-  </script>
   <style>
     #circle {
       position: absolute;

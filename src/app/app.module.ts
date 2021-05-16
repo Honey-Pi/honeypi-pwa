@@ -54,7 +54,6 @@ const appRoutes: Routes = [
     MyOwnCustomMaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    WebStorageModule,
     ChartsModule,
     NgxDygraphsModule,
     ColorPickerModule,
@@ -63,6 +62,7 @@ const appRoutes: Routes = [
     AngularFireAuthModule,
     AngularFireMessagingModule,
     AngularFireModule.initializeApp(environment.firebase),
+    WebStorageModule.forRoot(),
   ],
   providers: [MessagingService, AuthGuard],
   bootstrap: [AppComponent]
