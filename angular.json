@@ -35,7 +35,7 @@
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "./node_modules/dygraphs/dist/dygraph.min.css",
               "src/styles.scss"
-			      ],
+            ],
             "scripts": [
               "./node_modules/dygraphs/dist/dygraph.min.js",
               "./node_modules/chart.js/dist/chart.min.js"
@@ -52,7 +52,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
