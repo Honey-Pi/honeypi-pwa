@@ -37,7 +37,7 @@
     "lodash.merge": "^4.6.2",
     "lodash.set": "^4.3.2",
     "mat-progress-buttons": "^9.2.1",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "ng2-charts": "^2.2.3",
     "ngx-color-picker": "^11.0.0",
     "ngx-dygraphs": "^0.4.4",
